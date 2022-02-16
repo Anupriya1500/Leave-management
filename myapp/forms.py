@@ -1,3 +1,5 @@
+from dataclasses import fields
+from pyexpat import model
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
@@ -38,7 +40,7 @@ class LeaveRequestForm(forms.ModelForm):
     to_date=forms.DateField(input_formats=['%Y-%m-%d'],help_text="YYYY-MM-DD")
     class Meta:
         model=Leave
-        exclude=['id','employee']
+        exclude=['id','employee','is_leave_approved']
     def clean(self):
         cleaned_data = super().clean()
         from_date=cleaned_data.get("from_date")
@@ -54,5 +56,16 @@ class LeaveRequestForm(forms.ModelForm):
         leave_request.save()
         return leave_request
 
-class GrantLeaveRequestForm(forms.ModelForm):
-    pass
+class GrantLeaveRequestForm(forms.Form):
+    employee_id = forms.CharField(max_length=50,disabled=True)
+    max_leaves = forms.IntegerField(disabled=True)
+    leaves_remaining = forms.IntegerField(disabled=True)
+    from_date = forms.DateTimeField(disabled=True)
+    to_date = forms.DateTimeField(disabled=True)
+    is_leave_approved = forms.BooleanField()
+
+
+class GrantLeaveRequestModelForm(forms.ModelForm):
+    class Meta:
+        model=Leave
+        fields = '__all__'

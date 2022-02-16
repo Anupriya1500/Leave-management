@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate,logout
 from django.contrib.auth.decorators import login_required
 
-from myapp.forms import  LeaveRequestForm
+from myapp.forms import  GrantLeaveRequestForm, GrantLeaveRequestModelForm, LeaveRequestForm
 from .models import *
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
@@ -56,8 +56,29 @@ def create_leave_request(request):
         return render(request,'leave_request.html',{"form":leave_request_form})
         
 
-def grant_leaves_request(request):
+def grant_leaves_request(request,leave_id):
+    if request.user.is_authenticated :
+        employee=Employee.objects.get(user=request.user)
+        try:
+            leave_request=Leave.objects.get(id=leave_id)
+        except Leave.DoesNotExist:
+            leave_request=None
+        if employee is not None and employee.is_a_line_manager and leave_request is not None and leave_request.employee.line_manager==employee:
+            grant_leaves_request_form=GrantLeaveRequestModelForm(instance=leave_request)
+            if request.method=="POST":
+                grant_leaves_request_form=GrantLeaveRequestModelForm(data=request.POST,instance=leave_request)
+                if grant_leaves_request_form.is_valid():
+                    leave_request=grant_leaves_request_form.save()
+                    grant_leaves_request_form=GrantLeaveRequestModelForm(instance=leave_request)
+                
+                return render(request,'grant_leaves.html',{"form":grant_leaves_request_form})
+            else:
+                return render(request,'grant_leaves.html',{"form":grant_leaves_request_form})
+                
+        return HttpResponse('<h1>Permission Denied</h1>')
+    return HttpResponse('<h1>User Not Authenticated , Please Login </h1>')
+    
+def list_leave_requests(request):
     pass
-
 def reset_passwordd(request):
     pass

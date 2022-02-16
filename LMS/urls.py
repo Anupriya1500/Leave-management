@@ -25,6 +25,6 @@ urlpatterns = [
     path('login/',employeelogin),
     path('logout/',userlogout),
     path('request-leave/',create_leave_request),
-    path('grant-leave/',grant_leaves_request),
+    path('grant-leave/<int:leave_id>/',grant_leaves_request),
     path('Dashboard/',dashboard),
 ]
