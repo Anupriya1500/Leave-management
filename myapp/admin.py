@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import UserCreationForm
-from .models import Employee, User
+from .models import Employee, Leave, User
  
 class UserAdmin(UserAdmin):
    add_form = UserCreationForm
@@ -28,3 +28,4 @@ class UserAdmin(UserAdmin):
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
 admin.site.register(Employee)
+admin.site.register(Leave)

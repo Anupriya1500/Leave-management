@@ -62,11 +62,17 @@ class User(AbstractBaseUser):
 class Employee(models.Model):
     empId=models.CharField(max_length=50,primary_key=True)
     user= models.OneToOneField(User,on_delete=models.CASCADE)
-    line_manager=models.ForeignKey(to='self',null=True,on_delete=models.SET_NULL)
+    line_manager=models.ForeignKey(to='self',null=True,on_delete=models.SET_NULL,default=None,blank=True)
     position = models.CharField(max_length=80)
     max_leaves = models.IntegerField(default=31)
     leaves_remaining = models.IntegerField(default=31)
     is_a_line_manager = models.BooleanField(default=False)
+
+    # def save(self, *args, **kwargs):
+    #     if self.line_manager is None:
+    #         User.objects.get
+    #         ceo=Employee(empId=1,)
+    #     super().save(*args, **kwargs)
 
 class Leave(models.Model):
     id = models.IntegerField(auto_created=True,primary_key=True)
