@@ -17,14 +17,14 @@ from django.contrib import admin
 from django.urls import path
 from myapp.views import dashboard
 
-from myapp.views import dashboard,signup,employeelogin,userlogout,apply_for_leave,grant_leaves_request
+from myapp.views import dashboard,signup,employeelogin,userlogout,create_leave_request,grant_leaves_request
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',dashboard),
     path('signup/',signup),
     path('login/',employeelogin),
     path('logout/',userlogout),
-    path('request-leave/',apply_for_leave),
+    path('request-leave/',create_leave_request),
     path('grant-leave/',grant_leaves_request),
     path('Dashboard/',dashboard),
 ]
