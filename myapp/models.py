@@ -1,7 +1,7 @@
 from django.db import models
 
 from datetime import datetime
-
+from  django.utils import timezone
 from django.contrib.auth.models import (
    BaseUserManager, AbstractBaseUser
 )
@@ -38,7 +38,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(default=datetime.now())
+    date_joined = models.DateTimeField(default=timezone.now())
     name = models.CharField(max_length=50)
 
     objects = MyUserManager()
