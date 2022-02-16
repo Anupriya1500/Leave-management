@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate,logout
 from django.contrib.auth.decorators import login_required
+
+from myapp.forms import  LeaveRequestForm
 from .models import *
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
@@ -12,7 +14,6 @@ def signup(request):
 def employeelogin(request):
     if request.user.is_authenticated:
         return HttpResponse('<h1> Current Session User is already Authenticated <a href="/Dashboard"> Dashboard </a></h1>') 
-        
     else:
         if request.method=="POST":
             form=AuthenticationForm(request,data=request.POST)
@@ -43,8 +44,17 @@ def userlogout(request):
 def dashboard(request):
     return render(request,'dashboard.html')
 
-def apply_for_leave(request):
-    pass
+def create_leave_request(request):
+    if request.user.is_authenticated:
+        leave_request_form=LeaveRequestForm()
+            
+        if request.method=="POST":
+            leave_request_form=LeaveRequestForm(data=request.POST)
+            if leave_request_form.is_valid():
+                leave_request=leave_request_form.save(current_user=request.user)
+                #leave_request_form=LeaveRequestForm(instance=leave_request)
+        return render(request,'leave_request.html',{"form":leave_request_form})
+        
 
 def grant_leaves_request(request):
     pass
