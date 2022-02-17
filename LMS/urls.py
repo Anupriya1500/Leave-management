@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from myapp.views import dashboard, list_leave_requests
+from myapp.views import dashboard, home_page, list_leave_requests
 
 from myapp.views import dashboard,signup,employeelogin,userlogout,create_leave_request,grant_leaves_request
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',dashboard),
+    path('',home_page),
     path('signup/',signup),
     path('login/',employeelogin),
     path('logout/',userlogout),

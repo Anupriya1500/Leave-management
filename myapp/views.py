@@ -114,3 +114,6 @@ def list_leave_requests(request):
 
 def reset_passwordd(request):
     pass
+
+def home_page(request):
+    return render(request, 'index.html')
