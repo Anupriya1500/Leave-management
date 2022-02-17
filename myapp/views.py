@@ -79,6 +79,18 @@ def grant_leaves_request(request,leave_id):
     return HttpResponse('<h1>User Not Authenticated , Please Login </h1>')
     
 def list_leave_requests(request):
-    pass
+    if request.user.is_authenticated :
+        employee=Employee.objects.get(user=request.user)
+        if employee is not None and employee.is_a_line_manager and request.method=="GET":
+            try:
+                list_leave_requests=Leave.objects.filter(employee__line_manager=employee)
+                print(list_leave_requests)
+            except Leave.DoesNotExist:
+                list_leave_requests=None
+                
+            return render(request,'list_leave_requests.html',{"list_leave_requests":list_leave_requests})
+                
+        return HttpResponse('<h1>Permission Denied</h1>')
+    return HttpResponse('<h1>User Not Authenticated , Please Login </h1>')
 def reset_passwordd(request):
     pass
