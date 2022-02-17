@@ -1,7 +1,7 @@
 from django.db import models
 
 from datetime import datetime
-
+from  django.utils import timezone
 from django.contrib.auth.models import (
    BaseUserManager, AbstractBaseUser
 )
@@ -36,9 +36,9 @@ class MyUserManager(BaseUserManager):
 class User(AbstractBaseUser):
     email = models.EmailField(verbose_name='email address',unique=True,)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(default=datetime.now())
+    date_joined = models.DateTimeField(default=timezone.now())
     name = models.CharField(max_length=50)
 
     objects = MyUserManager()
@@ -79,3 +79,11 @@ class Leave(models.Model):
     from_date = models.DateTimeField(auto_now=False,auto_now_add=False)
     to_date = models.DateTimeField(auto_created=False,auto_now_add=False)
     employee = models.ForeignKey(to=Employee,on_delete=models.CASCADE)
+
+
+
+
+
+
+
+
