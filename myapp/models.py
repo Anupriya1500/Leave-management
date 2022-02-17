@@ -80,4 +80,4 @@ class Leave(models.Model):
     from_date = models.DateTimeField(auto_now=False,auto_now_add=False)
     to_date = models.DateTimeField(auto_created=False,auto_now_add=False)
     employee = models.ForeignKey(to=Employee,on_delete=models.CASCADE)
-    is_leave_approved = models.BooleanField(default=False,null=True,blank=True)
+    is_leave_approved = models.BooleanField(null=True,blank=True)
