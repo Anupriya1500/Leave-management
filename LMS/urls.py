@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from myapp.views import dashboard
+from myapp.views import dashboard, list_leave_requests
 
 from myapp.views import dashboard,signup,employeelogin,userlogout,create_leave_request,grant_leaves_request
 urlpatterns = [
@@ -25,6 +25,7 @@ urlpatterns = [
     path('login/',employeelogin),
     path('logout/',userlogout),
     path('request-leave/',create_leave_request),
-    path('grant-leave/',grant_leaves_request),
+    path('grant-leave/<int:leave_id>/',grant_leaves_request),
+    path('list-leave-requests/',list_leave_requests),
     path('Dashboard/',dashboard),
 ]
