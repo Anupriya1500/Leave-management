@@ -54,23 +54,42 @@ def create_leave_request(request):
                 leave_request=leave_request_form.save(current_user=request.user)
                 #leave_request_form=LeaveRequestForm(instance=leave_request)
         return render(request,'leave_request.html',{"form":leave_request_form})
-        
 
 def grant_leaves_request(request,leave_id):
     if request.user.is_authenticated :
         employee=Employee.objects.get(user=request.user)
         try:
             leave_request=Leave.objects.get(id=leave_id)
+            employee_who_asked_for_leave=leave_request.employee
+
         except Leave.DoesNotExist:
             leave_request=None
-        if employee is not None and employee.is_a_line_manager and leave_request is not None and leave_request.employee.line_manager==employee:
-            grant_leaves_request_form=GrantLeaveRequestModelForm(instance=leave_request)
+        if employee is not None and employee.is_a_line_manager and leave_request is not None and employee_who_asked_for_leave.line_manager==employee:
+            initial_data={
+                'employee_id':employee_who_asked_for_leave.empId,
+                'max_leaves':employee_who_asked_for_leave.max_leaves,
+                'leaves_remaining':employee_who_asked_for_leave.leaves_remaining,
+                'from_date':leave_request.from_date,
+                'to_date':leave_request.to_date,
+                'is_leave_approved':leave_request.is_leave_approved
+                }
+            grant_leaves_request_form=GrantLeaveRequestForm(
+                initial=initial_data
+                )
             if request.method=="POST":
-                grant_leaves_request_form=GrantLeaveRequestModelForm(data=request.POST,instance=leave_request)
+                grant_leaves_request_form=GrantLeaveRequestForm(data=request.POST)
                 if grant_leaves_request_form.is_valid():
-                    leave_request=grant_leaves_request_form.save()
-                    grant_leaves_request_form=GrantLeaveRequestModelForm(instance=leave_request)
-                
+                    leave_request=grant_leaves_request_form.save(leave_request=leave_request)
+                    
+                    initial_data={
+                'employee_id':employee_who_asked_for_leave.empId,
+                'max_leaves':employee_who_asked_for_leave.max_leaves,
+                'leaves_remaining':employee_who_asked_for_leave.leaves_remaining,
+                'from_date':leave_request.from_date,
+                'to_date':leave_request.to_date,
+                'is_leave_approved':leave_request.is_leave_approved
+                }
+                grant_leaves_request_form=GrantLeaveRequestForm(initial=initial_data)
                 return render(request,'grant_leaves.html',{"form":grant_leaves_request_form})
             else:
                 return render(request,'grant_leaves.html',{"form":grant_leaves_request_form})
@@ -92,5 +111,6 @@ def list_leave_requests(request):
                 
         return HttpResponse('<h1>Permission Denied</h1>')
     return HttpResponse('<h1>User Not Authenticated , Please Login </h1>')
+
 def reset_passwordd(request):
     pass
