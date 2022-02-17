@@ -1,10 +1,12 @@
+from dataclasses import fields
+from pyexpat import model
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from .models import Employee, Leave, User
- 
+import numpy as np 
  
 class UserCreationForm(forms.ModelForm):
    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -38,7 +40,7 @@ class LeaveRequestForm(forms.ModelForm):
     to_date=forms.DateField(input_formats=['%Y-%m-%d'],help_text="YYYY-MM-DD")
     class Meta:
         model=Leave
-        exclude=['id','employee']
+        exclude=['id','employee','is_leave_approved']
     def clean(self):
         cleaned_data = super().clean()
         from_date=cleaned_data.get("from_date")
@@ -54,5 +56,49 @@ class LeaveRequestForm(forms.ModelForm):
         leave_request.save()
         return leave_request
 
-class GrantLeaveRequestForm(forms.ModelForm):
-    pass
+class GrantLeaveRequestForm(forms.Form):
+    employee_id = forms.CharField(max_length=50,disabled=True,required=False)
+    max_leaves = forms.IntegerField(disabled=True,required=False)
+    leaves_remaining = forms.IntegerField(disabled=True,required=False)
+    from_date = forms.DateTimeField(disabled=True,required=False)
+    to_date = forms.DateTimeField(disabled=True,required=False)
+    is_leave_approved = forms.BooleanField(required=False)
+
+    def save(self,leave_request):
+        print("-------------------------------------------")
+
+        print(self.cleaned_data['is_leave_approved'])
+        #if line manager sent True as leave approved
+        if self.cleaned_data['is_leave_approved']:
+            employee=leave_request.employee
+            business_days_count=np.busday_count(leave_request.from_date.strftime('%Y-%m-%d'),leave_request.to_date.strftime('%Y-%m-%d'))
+                    
+            if leave_request.is_leave_approved == False:
+                employee.leaves_remaining =employee.leaves_remaining - business_days_count
+                leave_request.is_leave_approved=True
+                leave_request.save()
+                employee.save()
+                
+            else :
+                pass
+                
+        else:
+            employee=leave_request.employee
+            business_days_count=np.busday_count(leave_request.from_date.strftime('%Y-%m-%d'),leave_request.to_date.strftime('%Y-%m-%d'))
+                    
+            if leave_request.is_leave_approved == False:
+                pass
+            else :
+                employee.leaves_remaining =employee.leaves_remaining + business_days_count
+                leave_request.is_leave_approved=False
+                leave_request.save()
+                employee.save()
+        return leave_request
+
+class GrantLeaveRequestModelForm(forms.ModelForm):
+    employee_id = forms.CharField(max_length=50,disabled=True)
+    max_leaves = forms.IntegerField(disabled=True)
+    leaves_remaining = forms.IntegerField(disabled=True)
+    class Meta:
+        model=Leave
+        exclude=["employee"]

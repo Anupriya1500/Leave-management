@@ -9,39 +9,8 @@
     {% include 'includes/navheader_employee_app.html' %}
  {% endblock %}
 
-
-
-  {% block stylesheet %}
-
-   #override-start{
-    background:none !important;
-    top: 35% !important;
-    right:13px;
-    color:#000;
-    font-size: 24px;
-
-    }
-
-    .alert-warning{
-        background:#fd7b7b;
-    }
-
-    .alert-success {
-        background-color: #82b72a;
-    }
-
-    .alert-success,.alert-warning{
-        font-size:16px;
-    }
-
-
-
-       .sec{
-       border:1px solid yellow;
-       background:red;
-    }
-
-        .form-wrapper{
+ {% block stylesheet %}
+    .form-wrapper{
         -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
         box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
         padding: 2%;
@@ -49,23 +18,31 @@
         padding-bottom:5%;
     }
 
-        .btn-lg{
-        padding:8px 30px;
-        
-    }
-
-
-    .main-panel > .content {
-    padding: 60px 15px;
-    min-height: calc(100% - 123px);
 
 
 
+ #override-start{
+    background:none !important;
+    top: 35% !important;
+    right:13px;
+    color:#000;
+    font-size: 24px;
 
-  {% endblock %}
+}
 
+.alert-warning{
+    background:#fd7b7b;
+}
 
-  
+.alert-success {
+    background-color: #82b72a;
+}
+
+.alert-success,.alert-warning{
+    font-size:16px;
+}
+
+ {% endblock %}
 
  {% block content %}
         <section class="content">
@@ -73,7 +50,7 @@
            
                 <section class="form-wrapper">
                     <section class="row">
-                        <section class="col col-lg-12 col-md-12  col-sm-12">
+                        <section class="col col-sm-8 offset-sm-2">
 
                             {% if  messages %}
                                     {% for message in messages %}
@@ -87,19 +64,19 @@
 
                         </section>
                     </section>
-
                     <section class="row">
-                        <section class="col-lg-12 col-md-12 col-sm-12 text-center space-margin">
-                            <h3 class="title-h3">{{ title}}</h3>
+                        <section class="col-lg-12 col-md-12 col-sm-12 text-center">
+                            <h3 class="title-h3">Add User</h3>
+                            <p>A user must be created before adding an "Employee" to the system: So that you can select user acc while adding employees</p>
                         </section>
                     </section>
 
                     <section class="row">
                         <section class="col-lg-12 col-md-12 col-sm-12">
-                            <form action="{% url 'leave_request' %}" method="POST">
+                            <form action="" method="POST">
                                 {% csrf_token %}
-                                {{ form | crispy }}
-                                <button type="submit" class="btn btn-primary btn-lg btn-block">Request Leave</button>
+                                {{form | crispy }}
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
                             </form>
                         </section>
 
@@ -112,8 +89,19 @@
  {% endblock %}
 
 <script type="text/javascript">
-{% block extrajs %}
+{% block extrajs%}
+/*create-user-button - handler*/
 
+// $(document).ready(function(){
+
+// var createuser = $('.create-user-model');
+// createuser.on('click',function(){
+// alert("who clicked me ?")
+
+// });
+
+
+// });
 
 {% endblock %}
 </script>

@@ -96,7 +96,7 @@
 
                     <section class="row">
                         <section class="col-lg-12 col-md-12 col-sm-12">
-                            <form action="{% url 'leave_request' %}" method="POST">
+                            <form action="{% url 'dashboard:createleave' %}" method="POST">
                                 {% csrf_token %}
                                 {{ form | crispy }}
                                 <button type="submit" class="btn btn-primary btn-lg btn-block">Request Leave</button>
@@ -112,7 +112,7 @@
  {% endblock %}
 
 <script type="text/javascript">
-{% block extrajs %}
+{% block extrajs%}
 
 
 {% endblock %}

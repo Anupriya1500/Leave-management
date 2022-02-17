@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 TEMPLATES_DIR = os.path.join(BASE_DIR,'templates')
 
-STATIC_DIR=os.path.join(BASE_DIR,'static')
+
 
 
 
@@ -43,6 +43,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+
+ # INSTALLED APPS
+    'crispy_forms',
+    'phonenumber_field',
+    'widget_tweaks',
+ # PROJECT APPS
     'myapp',
 ]
 
@@ -83,7 +90,7 @@ WSGI_APPLICATION = 'LMS.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
     }
 }
 
@@ -122,19 +129,28 @@ USE_TZ = True
 AUTH_USER_MODEL = 'myapp.User'
 
 
-# for static files
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
+# https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [STATIC_DIR]
+
+# STATIC FILES WILL BE SERVED FROM STATIC_CDN WHEN WE ARE LIVE - OUT SIDE OF PROJECT
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR),'static_cdn','static_root')
 
 
-# for media
+#THIS KEEPS THE PROJECT FILES - CSS/JS/IMAGES/FONTS
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'static_in_proj','our_static'),
+]
+
+
+# MEDIA - UPLOADED FILES/IMAGES
 MEDIA_URL = '/media/'
-#MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# MEDIA FILES WILL BE SERVED FROM STATIC_CDN WHEN WE ARE LIVE
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),'static_cdn','media_root')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

@@ -30,6 +30,7 @@ class MyUserManager(BaseUserManager):
        """
        user = self.create_user(email, name=name,password=password)
        user.is_admin = True
+       user.is_staff = True
        user.save(using=self._db)
        return user
 
@@ -67,7 +68,8 @@ class Employee(models.Model):
     max_leaves = models.IntegerField(default=31)
     leaves_remaining = models.IntegerField(default=31)
     is_a_line_manager = models.BooleanField(default=False)
-
+    def __repr__(self):
+        return f"{self.user}"
     # def save(self, *args, **kwargs):
     #     if self.line_manager is None:
     #         User.objects.get
@@ -79,11 +81,4 @@ class Leave(models.Model):
     from_date = models.DateTimeField(auto_now=False,auto_now_add=False)
     to_date = models.DateTimeField(auto_created=False,auto_now_add=False)
     employee = models.ForeignKey(to=Employee,on_delete=models.CASCADE)
-
-
-
-
-
-
-
-
+    is_leave_approved = models.BooleanField(null=True,blank=True)
