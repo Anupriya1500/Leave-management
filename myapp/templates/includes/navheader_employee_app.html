@@ -41,7 +41,9 @@
                                 {% else %}
                                 <li><a href="{% url 'leave_request' %}">Apply for Leave</a></li>
                                 <li class="divider"></li>
-                                <li><a href="{% url 'dashboard' %}">All Leaves</a></li>
+                                {% if request.user.employee.is_a_line_manager %}
+                                <li><a href="{% url 'dashboard' %}">My Leaves</a></li>
+                                {% endif %}
                                 {% endif %}
                               </ul>
                               

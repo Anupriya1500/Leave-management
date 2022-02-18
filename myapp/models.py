@@ -62,7 +62,7 @@ class User(AbstractBaseUser):
 
 class Employee(models.Model):
     empId=models.CharField(max_length=50,primary_key=True)
-    user= models.OneToOneField(User,on_delete=models.CASCADE)
+    user= models.OneToOneField(User,on_delete=models.CASCADE,related_name='employee')
     line_manager=models.ForeignKey(to='self',null=True,on_delete=models.SET_NULL,default=None,blank=True)
     position = models.CharField(max_length=80)
     max_leaves = models.IntegerField(default=31)
@@ -70,6 +70,12 @@ class Employee(models.Model):
     is_a_line_manager = models.BooleanField(default=False)
     def __repr__(self):
         return f"{self.user}"
+    def get_leave_count(self):
+        return self.leaves.all().count()
+    def get_max_leaves(self):
+        return self.max_leaves
+    def get_leave_remaining(self):
+        return self.leaves_remaining
     # def save(self, *args, **kwargs):
     #     if self.line_manager is None:
     #         User.objects.get
@@ -80,5 +86,12 @@ class Leave(models.Model):
     id = models.IntegerField(auto_created=True,primary_key=True)
     from_date = models.DateTimeField(auto_now=False,auto_now_add=False)
     to_date = models.DateTimeField(auto_created=False,auto_now_add=False)
-    employee = models.ForeignKey(to=Employee,on_delete=models.CASCADE)
+    employee = models.ForeignKey(to=Employee,on_delete=models.CASCADE,related_name='leaves')
     is_leave_approved = models.BooleanField(null=True,blank=True)
+    Status_Choices=[('Pending','Pending'),
+    ('Approved','Approved'),
+    ('Rejected','Rejected'),
+    ]
+    status=models.CharField(choices=Status_Choices,default="Pending",max_length=50)
+    reason=models.TextField(default=" ",null=True)
+    

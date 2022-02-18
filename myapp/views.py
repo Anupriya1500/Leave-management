@@ -40,7 +40,7 @@ def employeelogin(request):
 def userlogout(request):    
     logout(request)
     messages.info(request,"You have Successfully logged out")
-    return redirect("/loginemp/")
+    return redirect("/login/")
 
 def dashboard(request):
     return render(request,'dashboard.html')
@@ -53,7 +53,9 @@ def create_leave_request(request):
             leave_request_form=LeaveRequestForm(data=request.POST)
             if leave_request_form.is_valid():
                 leave_request=leave_request_form.save(current_user=request.user)
-                #leave_request_form=LeaveRequestForm(instance=leave_request)
+
+                messages.success(request,"Leave Requested Created Successfully")
+                leave_request_form=LeaveRequestForm()
         return render(request,'leave_request.html',{"form":leave_request_form})
     return render(request, 'leave_request.html')
 
@@ -105,6 +107,14 @@ def list_leave_requests(request):
         if employee is not None and employee.is_a_line_manager and request.method=="GET":
             try:
                 list_leave_requests=Leave.objects.filter(employee__line_manager=employee)
+                print(list_leave_requests)
+            except Leave.DoesNotExist:
+                list_leave_requests=None
+                
+            return render(request,'list_leave_requests.html',{"list_leave_requests":list_leave_requests})
+        if employee is not None and not employee.is_a_line_manager and request.method=="GET":
+            try:
+                list_leave_requests=Leave.objects.filter(employee__user=request.user)
                 print(list_leave_requests)
             except Leave.DoesNotExist:
                 list_leave_requests=None
