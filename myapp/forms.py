@@ -40,7 +40,7 @@ class LeaveRequestForm(forms.ModelForm):
     to_date=forms.DateField(input_formats=['%Y-%m-%d'],help_text="YYYY-MM-DD")
     class Meta:
         model=Leave
-        exclude=['id','employee','is_leave_approved']
+        exclude=['id','employee','is_leave_approved','status']
     def clean(self):
         cleaned_data = super().clean()
         from_date=cleaned_data.get("from_date")

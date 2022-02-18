@@ -105,12 +105,27 @@
                     <section class="col col-lg-6">
                         <div class="leave-box sec-box">
                             <a href="">
-                            <span>Total Leaves: {{ staff_leaves.count }}</span>
+                            <span>Max Leaves: {{ request.user.employee.get_max_leaves}}</span>
                             </a>
                             <!-- <span class="count-object" style="color:#41b6d6;"></span>  -->
                         </div>
                     </section>
-                    
+                    <section class="col col-lg-6">
+                        <div class="leave-box sec-box">
+                            <a href="">
+                            <span>Leaves Remaining: {{ request.user.employee.get_leave_remaining }}</span>
+                            </a>
+                            <!-- <span class="count-object" style="color:#41b6d6;"></span>  -->
+                        </div>
+                    </section>
+                    <section class="col col-lg-6">
+                        <div class="leave-box sec-box">
+                            <a href="">
+                            <span>My Total Leaves: {{ request.user.employee.get_leave_count }}</span>
+                            </a>
+                            <!-- <span class="count-object" style="color:#41b6d6;"></span>  -->
+                        </div>
+                    </section>
 
                     
                     

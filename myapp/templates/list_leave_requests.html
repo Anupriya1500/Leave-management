@@ -182,8 +182,8 @@
 							    <tr>
 							      <!-- <th scope="col">#</th> -->
 							      <th scope="col"><b>User</b></th>
-							      <th scope="col"><b>Type</b></th>
-							      <th scope="col"><b>Day(s)</b></th>
+							      <th scope="col"><b>From Date</b></th>
+							      <th scope="col"><b>To Date</b></th>
 							      <th scope="col"><b>Status</b></th>
 							      <th scope="col"><b>Actions</b></th>
 							    </tr>
@@ -192,15 +192,22 @@
 							  	{% for leave in list_leave_requests %}
 							    <tr>
 
-							      <td>{{ leave.employee }}</td>
+							      <td>{{ leave.employee.user.name }}</td>
 							      <td>{{ leave.from_date}}</td>
 							      <td>{{ leave.to_date }}</td>
 							      <td><span class="badge badge-success" style="background-color:rgb(189, 138, 0); font-size: 14px;">{{ leave.status }}</span></td>
 
 							      <td> 
+                                    {% if request.user.employee.is_a_line_manager and request.user.is_staff %}
+               
 							      	<a href="{% url 'grant_leaves_request' leave.id %}" style="color: #795548;">
 							      	    <span>View</span>
 							      	</a>
+                                      {% else %}
+                                      <a href="/" style="color: #795548;">
+                                        <span>Detail View</span>
+                                    </a>
+                                      {% endif %}
 							      	
 							      </td>
 							    </tr>
