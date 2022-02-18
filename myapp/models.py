@@ -1,7 +1,5 @@
 from django.db import models
-
-from datetime import datetime
-from  django.utils import timezone
+from django.utils import timezone
 from django.contrib.auth.models import (
    BaseUserManager, AbstractBaseUser
 )
@@ -39,7 +37,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(default=timezone.now())
+    date_joined = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=50)
 
     objects = MyUserManager()
@@ -63,12 +61,12 @@ class User(AbstractBaseUser):
 class Employee(models.Model):
     empId=models.CharField(max_length=50,primary_key=True)
     user= models.OneToOneField(User,on_delete=models.CASCADE,related_name='employee')
-    line_manager=models.ForeignKey(to='self',null=True,on_delete=models.SET_NULL,default=None,blank=True)
+    line_manager=models.ForeignKey(to='self',null=True,on_delete=models.SET_NULL,default=None,blank=True,related_name='employees')
     position = models.CharField(max_length=80)
     max_leaves = models.IntegerField(default=31)
     leaves_remaining = models.IntegerField(default=31)
     is_a_line_manager = models.BooleanField(default=False)
-    def __repr__(self):
+    def __str__(self):
         return f"{self.user}"
     def get_leave_count(self):
         return self.leaves.all().count()
@@ -76,11 +74,24 @@ class Employee(models.Model):
         return self.max_leaves
     def get_leave_remaining(self):
         return self.leaves_remaining
-    # def save(self, *args, **kwargs):
-    #     if self.line_manager is None:
-    #         User.objects.get
-    #         ceo=Employee(empId=1,)
-    #     super().save(*args, **kwargs)
+    
+    #For Line Managers
+    def get_line_manager_employee_count(self):
+        if self.is_a_line_manager:
+            return self.employees.all().count()
+        return 0
+    def get_pending_requests_count(self):
+        if self.is_a_line_manager:
+            return Leave.objects.filter(status='Pending',employee__line_manager=self).count()
+        return 0
+    def get_approved_requests_count(self):
+        if self.is_a_line_manager:
+            return Leave.objects.filter(status='Approved',employee__line_manager=self).count()
+        return 0
+    def get_rejected_requests_count(self):
+        if self.is_a_line_manager:
+            return Leave.objects.filter(status='Rejected',employee__line_manager=self).count()
+        return 0
 
 class Leave(models.Model):
     id = models.IntegerField(auto_created=True,primary_key=True)

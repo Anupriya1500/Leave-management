@@ -174,7 +174,7 @@
                 	<!-- TABLE -->
                 	<div class="table-responsive table-shadow">
                 		<div class="text-center table-description">
-                			<h4 class="title-h3" style="text-shadow: 1px 0px rgba(0,0,0,0.11)">Pending Leaves</h4>
+                			<h4 class="title-h3" style="text-shadow: 1px 0px rgba(0,0,0,0.11)">All Leaves</h4>
                 		</div>
                 	
                 		<table class="table">
@@ -198,7 +198,7 @@
 							      <td><span class="badge badge-success" style="background-color:rgb(189, 138, 0); font-size: 14px;">{{ leave.status }}</span></td>
 
 							      <td> 
-                                    {% if request.user.employee.is_a_line_manager and request.user.is_staff %}
+                                    {% if request.user.employee.is_a_line_manager %}
                
 							      	<a href="{% url 'grant_leaves_request' leave.id %}" style="color: #795548;">
 							      	    <span>View</span>

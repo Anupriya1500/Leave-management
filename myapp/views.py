@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate,logout
 from django.contrib.auth.decorators import login_required
-
 from myapp.forms import  GrantLeaveRequestForm, GrantLeaveRequestModelForm, LeaveRequestForm
 from .models import *
 from django.contrib import messages
@@ -26,6 +25,7 @@ def employeelogin(request):
                     login(request,varuser)
                    # messages.info(request,f"You are logged in as {email}")
                     print("user authenticated Sucessfully ")
+                    return redirect("/Dashboard")
                     return render(request,'dashboard.html',{'user':varuser})
                 else:
                      print(f'Not Authenticated {email}{password}')
@@ -37,6 +37,7 @@ def employeelogin(request):
 
         form=AuthenticationForm()
         return render(request,'login.html',{'form':form})
+
 def userlogout(request):    
     logout(request)
     messages.info(request,"You have Successfully logged out")
@@ -75,7 +76,8 @@ def grant_leaves_request(request,leave_id):
                 'leaves_remaining':employee_who_asked_for_leave.leaves_remaining,
                 'from_date':leave_request.from_date,
                 'to_date':leave_request.to_date,
-                'is_leave_approved':leave_request.is_leave_approved
+                'reason':leave_request.reason,
+                'status' : leave_request.status
                 }
             grant_leaves_request_form=GrantLeaveRequestForm(
                 initial=initial_data
@@ -84,16 +86,18 @@ def grant_leaves_request(request,leave_id):
                 grant_leaves_request_form=GrantLeaveRequestForm(data=request.POST)
                 if grant_leaves_request_form.is_valid():
                     leave_request=grant_leaves_request_form.save(leave_request=leave_request)
-                    
                     initial_data={
                 'employee_id':employee_who_asked_for_leave.empId,
                 'max_leaves':employee_who_asked_for_leave.max_leaves,
                 'leaves_remaining':employee_who_asked_for_leave.leaves_remaining,
                 'from_date':leave_request.from_date,
                 'to_date':leave_request.to_date,
-                'is_leave_approved':leave_request.is_leave_approved
+                'reason':leave_request.reason,
+                'status' : leave_request.status
                 }
                 grant_leaves_request_form=GrantLeaveRequestForm(initial=initial_data)
+
+                messages.info(request,f"Leave Request {leave_request.status} ")
                 return render(request,'grant_leaves.html',{"form":grant_leaves_request_form})
             else:
                 return render(request,'grant_leaves.html',{"form":grant_leaves_request_form})
@@ -124,7 +128,19 @@ def list_leave_requests(request):
         return HttpResponse('<h1>Permission Denied</h1>')
     return HttpResponse('<h1>User Not Authenticated , Please Login </h1>')
 
+def line_manager_leave_requests(request):
+    if request.user.is_authenticated :
+        employee=Employee.objects.get(user=request.user)
+        if employee is not None and employee.is_a_line_manager:
+            line_managers_leave_requests=Leave.objects.filter(employee=employee)
+            return render(request,'line_manager_leave_requests.html',{"line_managers_leave_requests":line_managers_leave_requests})
+        return HttpResponse('<H1>User Is Not Associated with a Employee</H1>')
+    return HttpResponse('<H1>User Is Not Authorised</H1>')
+#todo-Check Online
 def reset_passwordd(request):
+    pass
+
+def list_line_managers_employees(request):
     pass
 
 def home_page(request):

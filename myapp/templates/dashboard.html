@@ -83,11 +83,19 @@
         <section class="content">
             <section class="container-fluid">
             	<section class="row">
-            		{% if request.user.is_superuser and request.user.is_staff %}
+            		{% if request.user.employee.is_a_line_manager %}
             		<section class="col col-lg-4">
             			<div class="employee-box sec-box">
             				<a href="">
-            				<span style="font-size: 24px;">Registered Employees:  {{ employees.count }}</span>
+            				<span style="font-size: 24px;">Total Employee:  {{ request.user.employee.get_line_manager_employee_count }}</span>
+            				</a>
+            				<!-- <span class="count-object"></span>  -->
+            			</div>
+            		</section>
+                    <section class="col col-lg-4">
+            			<div class="employee-box sec-box">
+            				<a href="">
+            				<span style="font-size: 24px;">Pending Requests:  {{ request.user.employee.get_pending_requests_count }}</span>
             				</a>
             				<!-- <span class="count-object"></span>  -->
             			</div>
@@ -95,12 +103,19 @@
             		<section class="col col-lg-4">
             			<div class="leave-box sec-box">
             				<a href="">
-            				<span style="font-size: 24px;"></span>Leaves Requested: {{ leaves.count }}</span>
+            				<span style="font-size: 24px;"></span>Leaves Approved: {{ request.user.employee.get_pending_requests_count }}</span>
             				</a>
                             <!-- <span class="count-object" style="color:#41b6d6;"></span>  -->
             			</div>
             		</section>
-            		
+            		<section class="col col-lg-4">
+            			<div class="leave-box sec-box">
+            				<a href="">
+            				<span style="font-size: 24px;"></span>Leaves Rejected: {{ request.user.employee.get_rejected_requests_count }}</span>
+            				</a>
+                            <!-- <span class="count-object" style="color:#41b6d6;"></span>  -->
+            			</div>
+            		</section>
             		{% else %}
                     <section class="col col-lg-6">
                         <div class="leave-box sec-box">

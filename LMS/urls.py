@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from myapp.views import dashboard,signup,employeelogin,userlogout,create_leave_request,grant_leaves_request,list_leave_requests
+from myapp.views import dashboard, line_manager_leave_requests,signup,employeelogin,userlogout,create_leave_request,grant_leaves_request,list_leave_requests
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',dashboard, name = 'dash'),
@@ -28,6 +28,7 @@ urlpatterns = [
     path('grant-leave/<int:leave_id>/',grant_leaves_request, name = 'grant_leaves_request'),
 
     path('list-leave-requests/',list_leave_requests, name = 'list_leave_requests'),
+    path('line-manger-leave-requests',line_manager_leave_requests,name='line_manager_leave_requests'),
     
     path('Dashboard/',dashboard, name='dashboard'),
 

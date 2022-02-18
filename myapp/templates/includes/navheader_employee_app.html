@@ -42,7 +42,7 @@
                                 <li><a href="{% url 'leave_request' %}">Apply for Leave</a></li>
                                 <li class="divider"></li>
                                 {% if request.user.employee.is_a_line_manager %}
-                                <li><a href="{% url 'dashboard' %}">My Leaves</a></li>
+                                <li><a href="{% url 'line_manager_leave_requests' %}">My Leaves</a></li>
                                 {% endif %}
                                 {% endif %}
                               </ul>

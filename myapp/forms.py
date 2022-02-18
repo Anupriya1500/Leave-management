@@ -45,6 +45,8 @@ class LeaveRequestForm(forms.ModelForm):
         cleaned_data = super().clean()
         from_date=cleaned_data.get("from_date")
         to_date=cleaned_data.get("to_date")
+        print(from_date)
+        print(to_date)
         if(from_date>=to_date):
             raise ValidationError(
                 "From Date can Not be After To Date"
@@ -62,35 +64,47 @@ class GrantLeaveRequestForm(forms.Form):
     leaves_remaining = forms.IntegerField(disabled=True,required=False)
     from_date = forms.DateTimeField(disabled=True,required=False)
     to_date = forms.DateTimeField(disabled=True,required=False)
-    is_leave_approved = forms.BooleanField(required=False)
-
+    reason = forms.CharField(disabled=True,required=False)
+    Status_Choices=[
+    ('Approved','Approved'),
+    ('Rejected','Rejected'),
+    ]
+    status=forms.ChoiceField(choices=Status_Choices)
     def save(self,leave_request):
         print("-------------------------------------------")
-
-        print(self.cleaned_data['is_leave_approved'])
+        print(self.cleaned_data['status']=='Approved')
         #if line manager sent True as leave approved
-        if self.cleaned_data['is_leave_approved']:
+        if self.cleaned_data['status']=='Approved':
             employee=leave_request.employee
             business_days_count=np.busday_count(leave_request.from_date.strftime('%Y-%m-%d'),leave_request.to_date.strftime('%Y-%m-%d'))
                     
-            if leave_request.is_leave_approved == False:
+            if leave_request.status == 'Rejected':
                 employee.leaves_remaining =employee.leaves_remaining - business_days_count
                 leave_request.is_leave_approved=True
+                leave_request.status='Approved'
                 leave_request.save()
                 employee.save()
                 
-            else :
-                pass
-                
-        else:
+            if leave_request.status == 'Pending':
+                employee.leaves_remaining =employee.leaves_remaining - business_days_count
+                leave_request.is_leave_approved=True
+                leave_request.status='Approved'
+                leave_request.save()
+                employee.save()
+        #Now New Form data Status is Set At Rejected    
+        elif self.cleaned_data['status']=='Rejected':
             employee=leave_request.employee
             business_days_count=np.busday_count(leave_request.from_date.strftime('%Y-%m-%d'),leave_request.to_date.strftime('%Y-%m-%d'))
                     
-            if leave_request.is_leave_approved == False:
-                pass
-            else :
+            if leave_request.status == 'Pending':
+                leave_request.is_leave_approved=False
+                leave_request.status='Rejected'
+                leave_request.save()
+                
+            if leave_request.status == 'Approved':
                 employee.leaves_remaining =employee.leaves_remaining + business_days_count
                 leave_request.is_leave_approved=False
+                leave_request.status='Rejected'
                 leave_request.save()
                 employee.save()
         return leave_request
