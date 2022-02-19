@@ -181,38 +181,26 @@
 							  <thead>
 							    <tr>
 							      <!-- <th scope="col">#</th> -->
-							      <th scope="col"><b>User</b></th>
-							      <th scope="col"><b>From Date</b></th>
-							      <th scope="col"><b>To Date</b></th>
-								 <th scope="'col"><b>Total Days</b></th>
-							      <th scope="col"><b>Status</b></th>
-							      <th scope="col"><b>Actions</b></th>
+                                  <th scope="col"><b>EmpId</b></th>
+							      <th scope="col"><b>Name</b></th>
+							      <th scope="col"><b>Max Leaves</b></th>
+							      <th scope="col"><b>Leaves Remaining</b></th>
+							      <th scope="col"><b>Position</b></th>
+							      
 							    </tr>
 							  </thead>
 							  <tbody>
-							  	{% for leave in list_leave_requests %}
+							  	{% for employee in list_emp_under_line_manager %}
 							    <tr>
 
-							      <td>{{ leave.employee.user.name }}</td>
-							      <td>{{ leave.from_date}}</td>
-							      <td>{{ leave.to_date }}</td>
-								  <td>{{leave.date_diff}}</td>
-								  
+							      <td>{{employee.empId }}</td>
+							      <td>{{ employee.user.name}}</td>
+							      <td>{{ employee.max_leaves }}</td>
+                                  <td>{{ employee.leaves_remaining}}</td>
+                                  <td>{{ employee.position}}</td>
 							      <td><span class="badge badge-success" style="background-color:rgb(189, 138, 0); font-size: 14px;">{{ leave.status }}</span></td>
 
-							      <td> 
-                                    {% if request.user.employee.is_a_line_manager %}
-               
-							      	<a href="{% url 'grant_leaves_request' leave.id %}" style="color: #795548;">
-							      	    <span>View</span>
-							      	</a>
-                                      {% else %}
-                                      <a href="{% url 'update_leaves_request' leave.id %}" style="color: #795548;">
-                                        <span>Update</span>
-                                    </a>
-                                      {% endif %}
-							      	
-							      </td>
+							      
 							    </tr>
 
 							    {% endfor %}

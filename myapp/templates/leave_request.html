@@ -1,5 +1,6 @@
 
 {% extends '_layout.html' %}
+{% load static %}
 
 {% block title %} {{ title }} {% endblock %}
 
@@ -109,9 +110,18 @@
 
             </section> <!-- /container --> 
         </section>
+
+        <script>
+            $(function () {
+              $("#datetimepicker1").datetimepicker({
+                format: 'DD/MM/YYYY',
+              });
+            });
+          </script>
  {% endblock %}
 
-<script type="text/javascript">
+
+<script type="text/javascript" src="{% static 'admin/js/calendar.js' %}"></script> <script type="text/javascript" src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script> 
 {% block extrajs %}
 
 

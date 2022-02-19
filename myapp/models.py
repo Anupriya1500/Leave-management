@@ -1,8 +1,10 @@
+from typing import List
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import (
    BaseUserManager, AbstractBaseUser
 )
+import numpy as np
 # Create your models here.
  
 class MyUserManager(BaseUserManager):
@@ -74,24 +76,56 @@ class Employee(models.Model):
         return self.max_leaves
     def get_leave_remaining(self):
         return self.leaves_remaining
+        
+    def my_leave_days(self):
+        return self.get_max_leaves() - self.get_leave_remaining()
+
     
     #For Line Managers
     def get_line_manager_employee_count(self):
         if self.is_a_line_manager:
             return self.employees.all().count()
         return 0
+    
+    def list_of_emp_under_line_manager(self):
+        if self.is_a_line_manager:
+            return Employee.objects.filter(line_manager=self)
+        return None
+
     def get_pending_requests_count(self):
         if self.is_a_line_manager:
             return Leave.objects.filter(status='Pending',employee__line_manager=self).count()
         return 0
+    
+    def list_of_pending_request(self):
+        if self.is_a_line_manager:
+            return Leave.objects.filter(status='Pending',employee__line_manager=self)
+
+
     def get_approved_requests_count(self):
         if self.is_a_line_manager:
             return Leave.objects.filter(status='Approved',employee__line_manager=self).count()
         return 0
+
+    def list_of_approved_request(self):
+        if self.is_a_line_manager:
+            return Leave.objects.filter(status='Approved', employee__line_manager=self)
+        if self.user:
+            return Leave.objects.filter(status='Approved')
+        return None
+
+
     def get_rejected_requests_count(self):
         if self.is_a_line_manager:
             return Leave.objects.filter(status='Rejected',employee__line_manager=self).count()
         return 0
+
+    def list_of_rejected_request(self):
+        if self.is_a_line_manager:
+            return Leave.objects.filter(status='Rejected', employee__line_manager=self)
+
+
+
 
 class Leave(models.Model):
     id = models.IntegerField(auto_created=True,primary_key=True)
@@ -105,4 +139,9 @@ class Leave(models.Model):
     ]
     status=models.CharField(choices=Status_Choices,default="Pending",max_length=50)
     reason=models.TextField(default=" ",null=True)
+
+    def date_diff(self):
+        diff = self.to_date.day-self.from_date.day
+        #business_days_count=np.busday_count(self.from_date.strftime('%Y-%m-%d'),self.to_date.strftime('%Y-%m-%d'))
+        return diff
     

@@ -7,6 +7,8 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from .models import Employee, Leave, User
 import numpy as np 
+
+from django.contrib.admin.widgets import AdminDateWidget
  
 class UserCreationForm(forms.ModelForm):
    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -36,8 +38,16 @@ class SignUp(forms.ModelForm):
     pass
 
 class LeaveRequestForm(forms.ModelForm):
-    from_date=forms.DateField(input_formats=['%Y-%m-%d'],help_text="YYYY-MM-DD")
-    to_date=forms.DateField(input_formats=['%Y-%m-%d'],help_text="YYYY-MM-DD")
+    #from_date=forms.DateField(widget = forms.SelectDateWidget())
+    #to_date=forms.DateField(widget = forms.SelectDateWidget())
+
+    from_date=forms.DateField(input_formats=['%d/%m/%Y'],
+        widget=forms.DateTimeInput(attrs={
+            'class': 'form-control datetimepicker-input',
+            'data-target': '#datetimepicker1'
+        }))
+    to_date=forms.DateField(widget = AdminDateWidget())
+
     class Meta:
         model=Leave
         exclude=['id','employee','is_leave_approved','status']

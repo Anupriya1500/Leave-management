@@ -86,7 +86,7 @@
             		{% if request.user.employee.is_a_line_manager %}
             		<section class="col col-lg-4">
             			<div class="employee-box sec-box">
-            				<a href="">
+            				<a href="{% url 'list_line_managers_employees' %}">
             				<span style="font-size: 24px;">Total Employee:  {{ request.user.employee.get_line_manager_employee_count }}</span>
             				</a>
             				<!-- <span class="count-object"></span>  -->
@@ -94,7 +94,7 @@
             		</section>
                     <section class="col col-lg-4">
             			<div class="employee-box sec-box">
-            				<a href="">
+            				<a href="{% url 'list_pending_requests' %}">
             				<span style="font-size: 24px;">Pending Requests:  {{ request.user.employee.get_pending_requests_count }}</span>
             				</a>
             				<!-- <span class="count-object"></span>  -->
@@ -102,15 +102,15 @@
             		</section>
             		<section class="col col-lg-4">
             			<div class="leave-box sec-box">
-            				<a href="">
-            				<span style="font-size: 24px;"></span>Leaves Approved: {{ request.user.employee.get_pending_requests_count }}</span>
+            				<a href="{% url 'list_approved_requests' %}">
+            				<span style="font-size: 24px;"></span>Leaves Approved: {{ request.user.employee.get_approved_requests_count }}</span>
             				</a>
                             <!-- <span class="count-object" style="color:#41b6d6;"></span>  -->
             			</div>
             		</section>
             		<section class="col col-lg-4">
             			<div class="leave-box sec-box">
-            				<a href="">
+            				<a href="{% url 'list_rejected_requests' %}">
             				<span style="font-size: 24px;"></span>Leaves Rejected: {{ request.user.employee.get_rejected_requests_count }}</span>
             				</a>
                             <!-- <span class="count-object" style="color:#41b6d6;"></span>  -->
@@ -136,8 +136,8 @@
                     </section>
                     <section class="col col-lg-6">
                         <div class="leave-box sec-box">
-                            <a href="">
-                            <span>My Total Leaves: {{ request.user.employee.get_leave_count }}</span>
+                            <a href="{% url 'list_approved_requests' %}">
+                            <span>My Total Leaves: {{ request.user.employee.my_leave_days}}</span>
                             </a>
                             <!-- <span class="count-object" style="color:#41b6d6;"></span>  -->
                         </div>
@@ -145,16 +145,10 @@
                     
                     
                     {% endif %}
-
-                    
+                  
 
                 </section>
                 
-                
-
-                
-
-
             </section> <!-- /container --> 
                      
         </section>

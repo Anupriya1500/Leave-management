@@ -60,6 +60,27 @@ def create_leave_request(request):
         return render(request,'leave_request.html',{"form":leave_request_form})
     return render(request, 'leave_request.html')
 
+def update_leave_request(request,leave_id):
+    if request.user.is_authenticated:
+        leave = Leave.objects.get(id=leave_id)
+        if leave.employee.user==request.user and leave.status=='Pending':
+            leave_request_form=LeaveRequestForm(instance=leave)
+            if request.method=='Post':
+                leave_request_form=LeaveRequestForm(data=request.POST,instance=leave)
+                if leave_request_form.is_valid():
+                    leave_request=leave_request_form.save(current_user=request.user)
+                    messages.success(request,"Leave Request form updated Successfully")
+                    leave_request_form=LeaveRequestForm(instance=leave_request)
+            
+                    return render(request,'leave_request.html',{"form":leave_request_form})
+
+            elif request.method=="GET":
+                return render(request,'leave_request.html',{"form":leave_request_form})
+        
+        return HttpResponse('<h1>Permission Denied</h1>')
+    return HttpResponse('<h1>User Not Authenticated , Please Login </h1>')
+        
+
 def grant_leaves_request(request,leave_id):
     if request.user.is_authenticated :
         employee=Employee.objects.get(user=request.user)
@@ -136,12 +157,37 @@ def line_manager_leave_requests(request):
             return render(request,'line_manager_leave_requests.html',{"line_managers_leave_requests":line_managers_leave_requests})
         return HttpResponse('<H1>User Is Not Associated with a Employee</H1>')
     return HttpResponse('<H1>User Is Not Authorised</H1>')
+
+
 #todo-Check Online
 def reset_passwordd(request):
     pass
 
 def list_line_managers_employees(request):
-    pass
+    if request.user.is_authenticated:
+        employee = Employee.objects.get(user=request.user)
+        if employee is not None and employee.is_a_line_manager:
+            return render(request, 'list_emp_under_line_manager.html',{"list_emp_under_line_manager":employee.list_of_emp_under_line_manager()})
+
+def list_pending_requests(request):
+    if request.user.is_authenticated:
+        employee = Employee.objects.get(user=request.user)
+        if employee is not None and employee.is_a_line_manager:
+            return render(request,'list_leave_requests.html', {"list_leave_requests":employee.list_of_pending_request()})
+
+def list_approved_requests(request):
+    if request.user.is_authenticated:
+        employee = Employee.objects.get(user=request.user)
+        if employee is not None:
+            return render(request, 'list_leave_requests.html', {"list_leave_requests":employee.list_of_approved_request()})
+
+def list_rejected_requests(request):
+    if request.user.is_authenticated:
+        employee = Employee.objects.get(user=request.user)
+        if employee is not None and employee.is_a_line_manager:
+            return render(request, 'list_leave_requests.html', {"list_leave_requests":employee.list_of_rejected_request()})
+
+
 
 def home_page(request):
     return render(request, 'index.html')
