@@ -20,6 +20,7 @@ def employeelogin(request):
             if form.is_valid():
                 email=form.cleaned_data.get('username')
                 password=form.cleaned_data.get('password')
+                print(f"{email} {password}")
                 varuser=authenticate(username=email,password=password)
                 if varuser is not None:
                     login(request,varuser)
@@ -27,13 +28,10 @@ def employeelogin(request):
                     print("user authenticated Sucessfully ")
                     return redirect("/Dashboard")
                     return render(request,'dashboard.html',{'user':varuser})
-                else:
-                     print(f'Not Authenticated {email}{password}')
-                    #messages.error(request,f"Invalid")
             else:
-                 print('Invalid')
-               
-               # messages.error(request,"Invalid email")
+                print(f'Invalid username or password')
+                messages.error(request,f"Invalid username or password")
+            
 
         form=AuthenticationForm()
         return render(request,'login.html',{'form':form})
