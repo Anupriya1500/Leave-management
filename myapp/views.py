@@ -11,6 +11,10 @@ from django.contrib.auth.forms import AuthenticationForm
 def signup(request):
     if not request.user.is_authenticated:
         return HttpResponse('<h1>SignUp Page</h1>')
+
+def home_page(request):
+    return render(request, 'index.html')
+    
 def employeelogin(request):
     if request.user.is_authenticated:
         return HttpResponse('<h1> Current Session User is already Authenticated <a href="/Dashboard"> Dashboard </a></h1>') 
@@ -187,5 +191,3 @@ def list_rejected_requests(request):
 
 
 
-def home_page(request):
-    return render(request, 'index.html')
