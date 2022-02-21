@@ -67,7 +67,7 @@ def update_leave_request(request,leave_id):
         leave = Leave.objects.get(id=leave_id)
         if leave.employee.user==request.user and leave.status=='Pending':
             leave_request_form=LeaveRequestForm(instance=leave)
-            if request.method=='Post':
+            if request.method=='POST':
                 leave_request_form=LeaveRequestForm(data=request.POST,instance=leave)
                 if leave_request_form.is_valid():
                     leave_request=leave_request_form.save(current_user=request.user)
