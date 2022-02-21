@@ -42,10 +42,12 @@ class LeaveRequestForm(forms.ModelForm):
     #from_date=forms.DateField(widget = forms.SelectDateWidget())
     #to_date=forms.DateField(widget = forms.SelectDateWidget())
 
-    from_date=forms.DateField(input_formats=['%Y-%m-%d'],help_text="YYYY-MM-DD")
-    to_date=forms.DateField(input_formats=['%Y-%m-%d'],help_text="YYYY-MM-DD")
-
-    
+    # from_date=forms.DateField(input_formats=['%d/%m/%Y'],
+    #     widget=forms.DateTimeInput(attrs={
+    #         'class': 'form-control datetimepicker-input',
+    #         'data-target': '#datetimepicker1'
+    #     }))
+    # to_date=forms.DateField(widget = AdminDateWidget())
 
     class Meta:
         model=Leave
