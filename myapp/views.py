@@ -11,6 +11,10 @@ from django.contrib.auth.forms import AuthenticationForm
 def signup(request):
     if not request.user.is_authenticated:
         return HttpResponse('<h1>SignUp Page</h1>')
+
+def home_page(request):
+    return render(request, 'index.html')
+    
 def employeelogin(request):
     if request.user.is_authenticated:
         return HttpResponse('<h1> Current Session User is already Authenticated <a href="/Dashboard"> Dashboard </a></h1>') 
@@ -20,6 +24,7 @@ def employeelogin(request):
             if form.is_valid():
                 email=form.cleaned_data.get('username')
                 password=form.cleaned_data.get('password')
+                print(f"{email} {password}")
                 varuser=authenticate(username=email,password=password)
                 if varuser is not None:
                     login(request,varuser)
@@ -27,13 +32,10 @@ def employeelogin(request):
                     print("user authenticated Sucessfully ")
                     return redirect("/Dashboard")
                     return render(request,'dashboard.html',{'user':varuser})
-                else:
-                     print(f'Not Authenticated {email}{password}')
-                    #messages.error(request,f"Invalid")
             else:
-                 print('Invalid')
-               
-               # messages.error(request,"Invalid email")
+                print(f'Invalid username or password')
+                messages.error(request,f"Invalid username or password")
+            
 
         form=AuthenticationForm()
         return render(request,'login.html',{'form':form})
@@ -189,5 +191,3 @@ def list_rejected_requests(request):
 
 
 
-def home_page(request):
-    return render(request, 'index.html')

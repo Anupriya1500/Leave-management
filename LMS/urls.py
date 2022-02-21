@@ -15,11 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+# For pwd change
+from django.contrib.auth import views as auth_views
 
-from myapp.views import dashboard, line_manager_leave_requests,signup,employeelogin, update_leave_request,userlogout,create_leave_request,grant_leaves_request,list_leave_requests,list_line_managers_employees,list_pending_requests,list_approved_requests,list_rejected_requests
+from myapp.views import dashboard, home_page, line_manager_leave_requests,signup,employeelogin, update_leave_request,userlogout,create_leave_request,grant_leaves_request,list_leave_requests,list_line_managers_employees,list_pending_requests,list_approved_requests,list_rejected_requests
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',dashboard, name = 'dash'),
+    path('',home_page, name='home_page'),
+    #path('',dashboard, name = 'dash'),
     path('signup/',signup, name = 'signup'),
     path('login/',employeelogin, name = 'login'),
     path('logout/',userlogout, name = 'logout'),
@@ -38,7 +41,15 @@ urlpatterns = [
     
     path('Dashboard/',dashboard, name='dashboard'),
 
-    
+
+    # Password change
+    path(
+        'change-password/',
+        auth_views.PasswordChangeView.as_view(
+            template_name='commons/change-password.html',
+            success_url = '/'
+        ),
+        name='change_password'),
 ]
 
 
