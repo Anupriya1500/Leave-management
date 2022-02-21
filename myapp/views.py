@@ -32,9 +32,12 @@ def employeelogin(request):
                     print("user authenticated Sucessfully ")
                     return redirect("/Dashboard")
                     return render(request,'dashboard.html',{'user':varuser})
+
+                else:
+                    messages.error(request,'Account is invalid', extra_tags = 'alert alert-error alert-dismissible show')
+                    return redirect('login')
             else:
-                print(f'Invalid username or password')
-                messages.error(request,f"Invalid username or password")
+                messages.error(request,"Invalid username or password",extra_tags = 'alert alert-error alert-dismissible show')
             
 
         form=AuthenticationForm()
@@ -42,7 +45,7 @@ def employeelogin(request):
 
 def userlogout(request):    
     logout(request)
-    messages.info(request,"You have Successfully logged out")
+    messages.info(request,"You have Successfully logged out",extra_tags = 'alert alert-error alert-dismissible show')
     return redirect("/login/")
 
 def dashboard(request):
