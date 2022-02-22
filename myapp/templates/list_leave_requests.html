@@ -197,25 +197,28 @@
 							      <td>{{ leave.from_date}}</td>
 							      <td>{{ leave.to_date }}</td>
 								  <td>{{leave.date_diff}}</td>
+
 								  {% if leave.is_leave_approved %}
 							      <td><span class="badge badge-success" style="background-color:rgb(189, 138, 0); font-size: 14px;">{{ leave.status }}</span></td>
 								  {% else %}
 							      <td ><span class="badge badge-warning" style="background-color:rgb(184, 12, 0); font-size: 14px;">{{ leave.status }}</span></td>
 							      {% endif %}
-
 							      <td> 
+
                                     {% if request.user.employee.is_a_line_manager %}
-               
 							      	<a href="{% url 'grant_leaves_request' leave.id %}" style="color: #795548;">
 							      	    <span>View</span>
 							      	</a>
-                                      {% else %}
-                                      <a href="{% url 'update_leaves_request' leave.id %}" style="color: #795548;">
-                                        <span>Update</span>
-                                    </a>
+                                     
+										{% else %}
+										<a href="{% url 'userleaveview' leave.id %}" style="color: #795548;">
+										<span>View</span>
+									</a>
+									
                                       {% endif %}
 							      	
 							      </td>
+
 							    </tr>
 
 							    {% endfor %}

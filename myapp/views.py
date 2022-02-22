@@ -1,6 +1,6 @@
 from urllib import request
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import login, authenticate,logout
 from django.contrib.auth.decorators import login_required
 from myapp.forms import  GrantLeaveRequestForm, GrantLeaveRequestModelForm, LeaveRequestForm
@@ -202,6 +202,21 @@ def list_rejected_requests(request):
         employee = Employee.objects.get(user=request.user)
         if employee is not None and employee.is_a_line_manager:
             return render(request, 'list_leave_requests.html', {"list_leave_requests":employee.list_of_rejected_request()})
+
+
+# View leave 
+
+def leaves_view(request,id):
+	if not (request.user.is_authenticated):
+		return redirect('/')
+
+	leave = get_object_or_404(Leave, id = id)
+	#print(leave.user)
+	employee = leave.employee
+	print(employee)
+	return render(request,'dashboard/leave_detail_view.html',{'leave':leave,'employee':employee,'title':'{0}-{1} leave'.format(request.user.name,leave.status)})
+
+
 
 
 
