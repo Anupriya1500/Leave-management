@@ -101,6 +101,10 @@
                                 {% csrf_token %}
                                 {{ form | crispy }}
                                 <button type="submit" class="btn btn-primary btn-lg btn-block">Request Leave</button>
+
+                                {% if form.status='Approved'%}
+                                <button type="button">Cancel</button>
+                                {% endif %}
                             </form>
                         </section>
 

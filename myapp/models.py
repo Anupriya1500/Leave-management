@@ -136,6 +136,7 @@ class Leave(models.Model):
     Status_Choices=[('Pending','Pending'),
     ('Approved','Approved'),
     ('Rejected','Rejected'),
+    ('Canceled','Canceled'),
     ]
     status=models.CharField(choices=Status_Choices,default="Pending",max_length=50)
     reason=models.TextField(default=" ",null=True)

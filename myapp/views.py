@@ -81,7 +81,21 @@ def update_leave_request(request,leave_id):
         
         return HttpResponse('<h1>Permission Denied</h1>')
     return HttpResponse('<h1>User Not Authenticated , Please Login </h1>')
-        
+
+def cancel_leave_request(request,leave_id):
+    if request.user.is_authenticated:
+        leave=Leave.objects.get(id=leave_id)
+        if leave.employee.user==request.user and leave.status=='Approved':
+                    leave_request_form=LeaveRequestForm(instance=leave)
+                    if request.method=='POST':
+                        leave_request_form=LeaveRequestForm(data=request.POST,instance=leave)
+                        if leave_request_form.is_valid():
+                            leave_request=leave_request_form.save(current_user=request.user)
+                            leave_request.status="Canceled"
+                            messages.success(request,"Leave Request form updated Successfully")
+                            leave_request_form=LeaveRequestForm(instance=leave_request)
+                    
+                            return render(request,'leave_request.html',{"form":leave_request_form})
 
 def grant_leaves_request(request,leave_id):
     if request.user.is_authenticated :
