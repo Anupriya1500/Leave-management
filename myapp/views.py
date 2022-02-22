@@ -1,6 +1,6 @@
 from urllib import request
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import login, authenticate,logout
 from django.contrib.auth.decorators import login_required
 from myapp.forms import  GrantLeaveRequestForm, GrantLeaveRequestModelForm, LeaveRequestForm
@@ -70,7 +70,7 @@ def update_leave_request(request,leave_id):
         leave = Leave.objects.get(id=leave_id)
         if leave.employee.user==request.user and leave.status=='Pending':
             leave_request_form=LeaveRequestForm(instance=leave)
-            if request.method=='Post':
+            if request.method=='POST':
                 leave_request_form=LeaveRequestForm(data=request.POST,instance=leave)
                 if leave_request_form.is_valid():
                     leave_request=leave_request_form.save(current_user=request.user)
@@ -84,7 +84,21 @@ def update_leave_request(request,leave_id):
         
         return HttpResponse('<h1>Permission Denied</h1>')
     return HttpResponse('<h1>User Not Authenticated , Please Login </h1>')
-        
+
+def cancel_leave_request(request,leave_id):
+    if request.user.is_authenticated:
+        leave=Leave.objects.get(id=leave_id)
+        if leave.employee.user==request.user and leave.status=='Approved':
+                    leave_request_form=LeaveRequestForm(instance=leave)
+                    if request.method=='POST':
+                        leave_request_form=LeaveRequestForm(data=request.POST,instance=leave)
+                        if leave_request_form.is_valid():
+                            leave_request=leave_request_form.save(current_user=request.user)
+                            leave_request.status="Canceled"
+                            messages.success(request,"Leave Request form updated Successfully")
+                            leave_request_form=LeaveRequestForm(instance=leave_request)
+                    
+                            return render(request,'leave_request.html',{"form":leave_request_form})
 
 def grant_leaves_request(request,leave_id):
     if request.user.is_authenticated :
@@ -191,6 +205,21 @@ def list_rejected_requests(request):
         employee = Employee.objects.get(user=request.user)
         if employee is not None and employee.is_a_line_manager:
             return render(request, 'list_leave_requests.html', {"list_leave_requests":employee.list_of_rejected_request()})
+
+
+# View leave 
+
+def leaves_view(request,id):
+	if not (request.user.is_authenticated):
+		return redirect('/')
+
+	leave = get_object_or_404(Leave, id = id)
+	#print(leave.user)
+	employee = leave.employee
+	print(employee)
+	return render(request,'dashboard/leave_detail_view.html',{'leave':leave,'employee':employee,'title':'{0}-{1} leave'.format(request.user.name,leave.status)})
+
+
 
 
 

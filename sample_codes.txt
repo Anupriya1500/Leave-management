@@ -1,0 +1,13 @@
+ <!-- cancel leave request -->
+
+<!-- {% if form.status='Approved'%}-->
+<!-- <button type="button">Cancel</button>-->
+<!--{% endif %} -->
+
+
+# update leaves
+
+ <!-- {% else %}
+ <a href="{% url 'update_leaves_request' leave.id %}" style="color: #795548;">
+  <span>View</span>
+  </a> -->
