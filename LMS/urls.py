@@ -18,7 +18,7 @@ from django.urls import path
 # For pwd change
 from django.contrib.auth import views as auth_views
 
-from myapp.views import dashboard, home_page, leaves_view, line_manager_leave_requests,signup,employeelogin, update_leave_request,userlogout,create_leave_request,grant_leaves_request,list_leave_requests,list_line_managers_employees,list_pending_requests,list_approved_requests,list_rejected_requests
+from myapp.views import dashboard, home_page, leaves_view, line_manager_leave_count, line_manager_leave_requests,signup,employeelogin, update_leave_request,userlogout,create_leave_request,grant_leaves_request,list_leave_requests,list_line_managers_employees,list_pending_requests,list_approved_requests,list_rejected_requests
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',home_page, name='home_page'),
@@ -53,6 +53,9 @@ urlpatterns = [
 
 # View Leaves
     path('leaves/all/view/<int:id>/',leaves_view,name='userleaveview'),
+
+# view line manager leave count
+    path('line-manager-leave-count/', line_manager_leave_count, name = 'line_manager_leave_count')
 ]
 
 

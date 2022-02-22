@@ -115,7 +115,7 @@
             <ul class="nav">
                 <li class="active">
                     <a href="{% url 'dashboard' %}">
-                        <i class="pe-7s-graph"></i>
+                        <i class="pe-7s-menu"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
@@ -139,6 +139,12 @@
                     {% if request.user.employee.is_a_line_manager %}<a href="{% url 'list_leave_requests' %}">{% else %}<a href="{% url 'list_leave_requests' %}"> {% endif %}
                         <i class="pe-7s-news-paper"></i>
                         <p>Leave Section</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'line_manager_leave_count' %}">
+                        <i class="pe-7s-graph"></i>
+                        <p>My Leaves Count</p>
                     </a>
                 </li>
                 
