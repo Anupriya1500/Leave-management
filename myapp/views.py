@@ -207,6 +207,9 @@ def list_rejected_requests(request):
             return render(request, 'list_leave_requests.html', {"list_leave_requests":employee.list_of_rejected_request()})
 
 
+
+def line_manager_leave_count(request):
+    return render(request,'line_manager_leave_count.html')
 # View leave 
 
 def leaves_view(request,id):
