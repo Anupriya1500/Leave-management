@@ -1,3 +1,4 @@
+from email.policy import default
 from typing import List
 from django.db import models
 from django.utils import timezone
@@ -125,21 +126,32 @@ class Employee(models.Model):
             return Leave.objects.filter(status='Rejected', employee__line_manager=self)
 
 
-
+'from_date','to_date','status','reason'
 
 class Leave(models.Model):
     id = models.IntegerField(auto_created=True,primary_key=True)
     from_date = models.DateTimeField(auto_now=False,auto_now_add=False)
     to_date = models.DateTimeField(auto_created=False,auto_now_add=False)
     employee = models.ForeignKey(to=Employee,on_delete=models.CASCADE,related_name='leaves')
-    is_leave_approved = models.BooleanField(null=True,blank=True)
+
+    # is_pending ia a boolean field which will denote the state of leave obj
+
+    is_leave_pending = models.BooleanField(null=True,blank=True, default=True)
+    is_leave_approved = models.BooleanField(null=True,blank=True,default=False)
+    is_leave_rejected = models.BooleanField(null=True,blank=True,default=False)
+    is_leave_cancelled = models.BooleanField(null=True,blank=True,default=False)
+    
     Status_Choices=[('Pending','Pending'),
     ('Approved','Approved'),
     ('Rejected','Rejected'),
-    ('Canceled','Canceled'),
+    ('Cancelation Approved','Cancelation Approved'),
+    ('Cancelation Rejected','Cancelation Rejected'),
+    ('Cancelation Pending','Cancelation Pending'),
     ]
     status=models.CharField(choices=Status_Choices,default="Pending",max_length=50)
     reason=models.TextField(default=" ",null=True)
+  
+
 
     def date_diff(self):
         diff = self.to_date.day-self.from_date.day

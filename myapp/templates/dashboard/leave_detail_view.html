@@ -169,7 +169,25 @@ span{
                           
                         </div>
                       </section>
+
+                      {% if leave.is_leave_approved%}
+
+                    <section class="row"></section>
+                      <section class="col col-lg-4 col-sm-12 col-lg-offset-7 text-center">
+                        <div class="btn-group btn-group-justified">
+                          
+                          <a href="{% url  'cancel_leave_request'  leave.id %}" class="btn btn-danger" style="background-color:rgb(185, 0, 0); color: white;" name='unapprove'> Cancel</a>
+                          </a>
+                          
+                        </div>
+                      </section>
+                    
+                      {% endif %}
+
                     </section>
+    
+                  
+                    
 
                              
                                   <span style="font-size: 13px;padding-left: 1rem;" class="pull-left">Created <b>{{ leave.created }}</b></span>
