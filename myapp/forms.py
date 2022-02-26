@@ -84,7 +84,36 @@ class GrantLeaveRequestForm(forms.ModelForm):
         #self.default_text = kwargs.pop('text')
 
         super(GrantLeaveRequestForm, self).__init__(*args, **kwargs)
-        #self.fields['body'].initial = self.default_text
+        leave=self.instance
+        if leave.is_leave_pending and leave.is_leave_approved and leave.is_leave_cancelled:
+            Status_Choices=[('Cancelation Approved','Cancelation Approved'),
+    ('Cancelation Rejected','Cancelation Rejected'),
+    ('Cancelation Pending','Cancelation Pending'),
+    
+    ]
+        if leave.is_leave_pending and leave.is_leave_approved:
+            Status_Choices=[('Approved','Approved'),
+    ('Rejected','Rejected'),
+    ]
+        if not leave.is_leave_pending and leave.is_leave_approved or  leave.is_leave_rejected and not leave.is_leave_cancelled:
+            Status_Choices=[('Approved','Approved'),
+    ('Rejected','Rejected'),
+    ]
+        if not leave.is_leave_pending and leave.is_leave_approved and leave.is_leave_cancelled and leave.is_leave_rejected:
+            Status_Choices=[('Cancelation Approved','Cancelation Approved'),
+    ('Cancelation Rejected','Cancelation Rejected'),
+    ('Cancelation Pending','Cancelation Pending'),
+    
+    ]
+        else:
+            Status_Choices=[('Pending','Pending'),
+        ('Approved','Approved'),
+        ('Rejected','Rejected'),
+        ('Cancelation Approved','Cancelation Approved'),
+        ('Cancelation Rejected','Cancelation Rejected'),
+        ('Cancelation Pending','Cancelation Pending'),
+        ]
+       # self.fields['employee_id'].initial = self.default_text
     class Meta:
         models=Leave
         fields=['from_date','to_date','status','reason']
