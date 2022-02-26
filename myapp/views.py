@@ -123,10 +123,11 @@ def grant_leaves_request(request,leave_id):
                 'status' : leave_request.status
                 }
             grant_leaves_request_form=GrantLeaveRequestForm(
-                initial=initial_data
+                #initial=initial_data
+                instance=leave_request
                 )
             if request.method=="POST":
-                grant_leaves_request_form=GrantLeaveRequestForm(data=request.POST)
+                grant_leaves_request_form=GrantLeaveRequestForm(data=request.POST,instance=leave_request)
                 if grant_leaves_request_form.is_valid():
                     leave_request=grant_leaves_request_form.save(leave_request=leave_request)
                     initial_data={
@@ -138,7 +139,7 @@ def grant_leaves_request(request,leave_id):
                 'reason':leave_request.reason,
                 'status' : leave_request.status
                 }
-                grant_leaves_request_form=GrantLeaveRequestForm(initial=initial_data)
+                grant_leaves_request_form=GrantLeaveRequestForm(instance=leave_request)
 
                 messages.info(request,f"Leave Request {leave_request.status} ")
                 return render(request,'grant_leaves.html',{"form":grant_leaves_request_form})

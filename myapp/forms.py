@@ -80,8 +80,8 @@ class GrantLeaveRequestForm(forms.ModelForm):
     ('Rejected','Rejected'),
     ]
     status=forms.ChoiceField(choices=Status_Choices)
-    def __init__(self, *args,**kwargs):
-        #self.default_text = kwargs.pop('text')
+    def __init__(self,*args, **kwargs):
+            #self.default_text = kwargs.pop('text')
 
         super(GrantLeaveRequestForm, self).__init__(*args, **kwargs)
         leave=self.instance
@@ -105,6 +105,13 @@ class GrantLeaveRequestForm(forms.ModelForm):
     ('Cancelation Pending','Cancelation Pending'),
     
     ]
+        if leave.is_leave_approved:
+            Status_Choices=[('Pending','Pending'),
+        ('Approved','Approved'),
+        ('Cancelation Approved','Cancelation Approved'),
+        ('Cancelation Rejected','Cancelation Rejected'),
+        
+            ]
         else:
             Status_Choices=[('Pending','Pending'),
         ('Approved','Approved'),
@@ -113,9 +120,9 @@ class GrantLeaveRequestForm(forms.ModelForm):
         ('Cancelation Rejected','Cancelation Rejected'),
         ('Cancelation Pending','Cancelation Pending'),
         ]
-       # self.fields['employee_id'].initial = self.default_text
+        self.fields['status'].choices = Status_Choices
     class Meta:
-        models=Leave
+        model=Leave
         fields=['from_date','to_date','status','reason']
     def save(self,leave_request):
         print("-------------------------------------------")
