@@ -4,6 +4,18 @@ from django.utils import timezone
 from django.contrib.auth.models import (
    BaseUserManager, AbstractBaseUser
 )
+from cryptography.fernet import Fernet
+def encryptPassword(password):
+    key = Fernet.generate_key()
+    fernet = Fernet(key)
+    encpassword = fernet.encrypt(password.encode())
+    return encpassword
+
+def decryptPassword(password):
+    key = Fernet.generate_key()
+    fernet = Fernet(key)
+    decpassword = fernet.decrypt(password.encode())
+    return decpassword
 import numpy as np
 # Create your models here.
  
@@ -33,6 +45,7 @@ class MyUserManager(BaseUserManager):
        user.is_staff = True
        user.save(using=self._db)
        return user
+
 
 class User(AbstractBaseUser):
     email = models.EmailField(verbose_name='email address',unique=True,)

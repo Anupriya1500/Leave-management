@@ -8,8 +8,20 @@ from django.db import transaction
 from .models import Employee, Leave, User
 import numpy as np 
 import datetime
-
 from django.contrib.admin.widgets import AdminDateWidget
+from cryptography.fernet import Fernet
+def encryptPassword(password):
+    key = Fernet.generate_key()
+    fernet = Fernet(key)
+    encpassword = fernet.encrypt(password.encode())
+    return encpassword
+
+def decryptPassword(password):
+    key = Fernet.generate_key()
+    fernet = Fernet(key)
+    decpassword = fernet.decrypt(password.encode())
+    return decpassword
+
  
 class UserCreationForm(forms.ModelForm):
    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)

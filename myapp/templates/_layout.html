@@ -141,12 +141,14 @@
                         <p>Leave Section</p>
                     </a>
                 </li>
+                {% if request.user.employee.is_a_line_manager %}
                 <li>
                     <a href="{% url 'line_manager_leave_count' %}">
                         <i class="pe-7s-graph"></i>
                         <p>My Leaves Count</p>
                     </a>
                 </li>
+                {% endif %}
                 
             </ul>
     	</div>
