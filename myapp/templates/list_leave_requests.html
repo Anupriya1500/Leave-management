@@ -181,7 +181,11 @@
 							  <thead>
 							    <tr>
 							      <!-- <th scope="col">#</th> -->
-							      <th scope="col"><b>User</b></th>
+								  {% if request.user.employee.is_a_line_manager %}
+							      <th scope="col"><b>Employee</b></th>
+								  {% else %}
+								  <th scope="col"><b>Manager</b></th>
+								  {% endif %}
 							      <th scope="col"><b>From Date</b></th>
 							      <th scope="col"><b>To Date</b></th>
 								 <th scope="'col"><b>Total Days</b></th>
@@ -192,8 +196,13 @@
 							  <tbody>
 							  	{% for leave in list_leave_requests %}
 							    <tr>
-
+								{% if request.user.employee.is_a_line_manager %}
 							      <td>{{ leave.employee.user.name }}</td>
+
+								  {% else %}
+								  <td>{{ leave.employee.line_manager.user.name }}</td>
+								  {%endif%}
+								  
 							      <td>{{ leave.from_date}}</td>
 							      <td>{{ leave.to_date }}</td>
 								  <td>{{leave.date_diff}}</td>

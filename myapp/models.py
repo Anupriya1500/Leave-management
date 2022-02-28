@@ -110,13 +110,14 @@ class Employee(models.Model):
 
     def get_pending_requests_count(self):
         if self.is_a_line_manager:
-            return Leave.objects.filter(status='Pending',employee__line_manager=self).count()
+            return Leave.objects.filter(status__in =('Pending','Cancelation Pending'),employee__line_manager=self).count()
         return 0
+    
     
     def list_of_pending_request(self):
         if self.is_a_line_manager:
-            return Leave.objects.filter(status='Pending',employee__line_manager=self)
-
+            return Leave.objects.filter(status__in =('Pending','Cancelation Pending'),employee__line_manager=self)
+    
 
     def get_approved_requests_count(self):
         if self.is_a_line_manager:
