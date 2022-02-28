@@ -18,7 +18,7 @@ from django.urls import path
 # For pwd change
 from django.contrib.auth import views as auth_views
 
-from myapp.views import dashboard, home_page, leaves_view, line_manager_leave_count, line_manager_leave_requests,signup,employeelogin, update_leave_request,userlogout,create_leave_request,grant_leaves_request,list_leave_requests,list_line_managers_employees,list_pending_requests,list_approved_requests,list_rejected_requests
+from myapp.views import cancel_leave_request, dashboard, home_page, leaves_view, line_manager_leave_count, line_manager_leave_requests,signup,employeelogin, update_leave_request,userlogout,create_leave_request,grant_leaves_request,list_leave_requests,list_line_managers_employees,list_pending_requests,list_approved_requests,list_rejected_requests
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',home_page, name='home_page'),
@@ -30,6 +30,8 @@ urlpatterns = [
     path('request-leave/',create_leave_request, name = 'leave_request'),
     path('grant-leave/<int:leave_id>/',grant_leaves_request, name = 'grant_leaves_request'),
     path('update-leave/<int:leave_id>/',update_leave_request, name = 'update_leaves_request'),
+    # cancel leave request
+    path('cancel-leave-request/<int:leave_id>', cancel_leave_request, name = 'cancel_leave_request'),
 
     path('list-leave-requests/',list_leave_requests, name = 'list_leave_requests'),
     path('line-manger-leave-requests/',line_manager_leave_requests,name='line_manager_leave_requests'),
@@ -55,7 +57,9 @@ urlpatterns = [
     path('leaves/all/view/<int:id>/',leaves_view,name='userleaveview'),
 
 # view line manager leave count
-    path('line-manager-leave-count/', line_manager_leave_count, name = 'line_manager_leave_count')
+    path('line-manager-leave-count/', line_manager_leave_count, name = 'line_manager_leave_count'),
+
+
 ]
 
 

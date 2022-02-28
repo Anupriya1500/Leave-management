@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import login, authenticate,logout
 from django.contrib.auth.decorators import login_required
-from myapp.forms import  GrantLeaveRequestForm, GrantLeaveRequestModelForm, LeaveRequestForm
+from myapp.forms import  CancelLeaveRequestForm, GrantLeaveRequestForm, GrantLeaveRequestModelForm, LeaveRequestForm
 from .models import *
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
@@ -69,15 +69,19 @@ def dashboard(request):
 def create_leave_request(request):
     if request.user.is_authenticated:
         leave_request_form=LeaveRequestForm()
-            
-        if request.method=="POST":
-            leave_request_form=LeaveRequestForm(data=request.POST)
-            if leave_request_form.is_valid():
-                leave_request=leave_request_form.save(current_user=request.user)
 
-                messages.success(request,"Leave Requested Created Successfully")
-                leave_request_form=LeaveRequestForm()
-        return render(request,'leave_request.html',{"form":leave_request_form})
+        if request.user.employee.line_manager is None:
+            messages.success(request,"Please contact your admin to assign you a line manager")
+
+        else:   
+            if request.method=="POST":
+                leave_request_form=LeaveRequestForm(data=request.POST)
+                if leave_request_form.is_valid():
+                    leave_request=leave_request_form.save(current_user=request.user)
+
+                    messages.success(request,"Leave Requested Created Successfully")
+                    leave_request_form=LeaveRequestForm()
+        return render(request,'leave_request.html',{"form":leave_request_form,"submit_button_name": 'Request Leave'})
     return render(request, 'leave_request.html')
 
 def update_leave_request(request,leave_id):
@@ -92,10 +96,10 @@ def update_leave_request(request,leave_id):
                     messages.success(request,"Leave Request form updated Successfully")
                     leave_request_form=LeaveRequestForm(instance=leave_request)
             
-                    return render(request,'leave_request.html',{"form":leave_request_form})
+                    return render(request,'leave_request.html',{"form":leave_request_form,"submit_button_name": 'Update Leave'})
 
             elif request.method=="GET":
-                return render(request,'leave_request.html',{"form":leave_request_form})
+                return render(request,'leave_request.html',{"form":leave_request_form, "submit_button_name": 'Update Leave'})
         
         return HttpResponse('<h1>Permission Denied</h1>')
     return HttpResponse('<h1>User Not Authenticated , Please Login </h1>')
@@ -104,16 +108,22 @@ def cancel_leave_request(request,leave_id):
     if request.user.is_authenticated:
         leave=Leave.objects.get(id=leave_id)
         if leave.employee.user==request.user and leave.status=='Approved':
-                    leave_request_form=LeaveRequestForm(instance=leave)
-                    if request.method=='POST':
-                        leave_request_form=LeaveRequestForm(data=request.POST,instance=leave)
-                        if leave_request_form.is_valid():
-                            leave_request=leave_request_form.save(current_user=request.user)
-                            leave_request.status="Canceled"
-                            messages.success(request,"Leave Request form updated Successfully")
-                            leave_request_form=LeaveRequestForm(instance=leave_request)
+            initial_data={
+                'from_date':leave.from_date,
+                'to_date': leave.to_date,
+            }
+            cancel_leave_request_form = CancelLeaveRequestForm(initial=initial_data)
+            if request.method=='POST':
+                cancel_leave_request_form=CancelLeaveRequestForm(data=request.POST)
+                if cancel_leave_request_form.is_valid():
+                    leave_request = cancel_leave_request_form.save(leave_request=leave)
                     
-                            return render(request,'leave_request.html',{"form":leave_request_form})
+                    messages.success(request,"Cancel Leave Request form submitted Successfully")
+                
+                return redirect ("/Dashboard")
+            
+            return render(request,'leave_request.html',{"form":cancel_leave_request_form,
+            "submit_button_name": 'Cancel Leave'})
 
 def grant_leaves_request(request,leave_id):
     if request.user.is_authenticated :
@@ -135,10 +145,11 @@ def grant_leaves_request(request,leave_id):
                 'status' : leave_request.status
                 }
             grant_leaves_request_form=GrantLeaveRequestForm(
-                initial=initial_data
+                #initial=initial_data
+                instance=leave_request
                 )
             if request.method=="POST":
-                grant_leaves_request_form=GrantLeaveRequestForm(data=request.POST)
+                grant_leaves_request_form=GrantLeaveRequestForm(data=request.POST,instance=leave_request)
                 if grant_leaves_request_form.is_valid():
                     leave_request=grant_leaves_request_form.save(leave_request=leave_request)
                     initial_data={
@@ -150,7 +161,7 @@ def grant_leaves_request(request,leave_id):
                 'reason':leave_request.reason,
                 'status' : leave_request.status
                 }
-                grant_leaves_request_form=GrantLeaveRequestForm(initial=initial_data)
+                grant_leaves_request_form=GrantLeaveRequestForm(instance=leave_request)
 
                 messages.info(request,f"Leave Request {leave_request.status} ")
                 return render(request,'grant_leaves.html',{"form":grant_leaves_request_form})
@@ -223,8 +234,11 @@ def list_rejected_requests(request):
 
 
 
+
 def line_manager_leave_count(request):
     return render(request,'line_manager_leave_count.html')
+
+    
 # View leave 
 
 def leaves_view(request,id):

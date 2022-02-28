@@ -11,3 +11,45 @@
  <a href="{% url 'update_leaves_request' leave.id %}" style="color: #795548;">
   <span>View</span>
   </a> -->
+
+
+
+Flow=---------------------
+
+models mai boolean fields add kari
+make cancel form(from date, to date both disabled, reason for cancellation)
+this form class must have a save method which will make Is _cancelled to True and is_pending to True and It will append the cancel reason in already reason text
+ of that obj 
+frontend mai for detail view of leave req , when approved we get cancel button
+ for urls.py add path for that particular cancel button hit ,a new Html Page is created for that Cancel Form 
+views.py create a fn for that url req which will create a cancel req for the user leave adn send it to LM
+{
+    if leave.is_approved and not is_pending:
+        We have to crwate a cancelrequestForm with initial data of that particular leave obj (passing from date , to date ,and reason (Blank ))
+        and call the same method of that form obj
+} 
+
+LM Side
+Granting cancel leave req
+fro accepting or rejecting the cancel request we have to change the already created Grant leave request form class to make the status field as disabled 
+and when passing the initial data from views we have to create a logic for setting the status using if or else statements on the boolean fields of leave obj like Is_pending , Is _approved,_is_rejected
+then we have to make changes in the save method of grant leave request class to mark the boolean fields to is_pending =False, is approved to t or F,to_rejected to T or False, IsCancell to T or F
+
+name=anuj
+to find all the leaves of anuj where his leave request is in pending and is cancel and line_manager is On leave
+Leave.objects.filter(employee=='Anuj', status=='Pending')
+
+
+For public holidays
+
+
+from datetime import date
+import holidays
+
+us_holidays = holidays.US()  # this is a dict
+# the below is the same, but takes a string:
+us_holidays = holidays.country_holidays('US')  # this is a dict
+
+date(2015, 1, 1) in us_holidays  # True
+date(2015, 1, 2) in us_holidays  # False
+us_holidays.get('2014-01-01')  # "New Year's Day"
