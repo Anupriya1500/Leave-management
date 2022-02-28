@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from .models import Employee, Leave, User
 import numpy as np 
-
+import holidays
 from django.contrib.admin.widgets import AdminDateWidget
  
 class UserCreationForm(forms.ModelForm):
@@ -87,9 +87,9 @@ class GrantLeaveRequestForm(forms.ModelForm):
         
         leave=self.instance
         employee=leave.employee
-        self.fields['employee_id']=employee.id
-        self.fields['max_leaves']=employee.max_leaves
-        self.fields['leaves_remaining']=employee.leaves_remaining
+        self.fields['employee_id'].initial=employee.empId
+        self.fields['max_leaves'].initial=employee.max_leaves
+        self.fields['leaves_remaining'].initial=employee.leaves_remaining
 #Pending     
         if leave.is_leave_pending and leave.is_leave_approved and not leave.is_leave_rejected and not leave.is_leave_cancelled:
             Status_Choices=[('Approved','Approved'),
@@ -296,6 +296,8 @@ class CancelLeaveRequestForm(forms.Form):
         return leave_request
         
 
+def get_leave_count(from_date, to_date):
+    business_days_count=np.busday_count(from_date.strftime('%Y-%m-%d'),to_date.strftime('%Y-%m-%d'),holidays=[])
         
 
 

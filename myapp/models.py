@@ -69,6 +69,8 @@ class Employee(models.Model):
     max_leaves = models.IntegerField(default=31)
     leaves_remaining = models.IntegerField(default=31)
     is_a_line_manager = models.BooleanField(default=False)
+
+    
     def __str__(self):
         return f"{self.user}"
     def get_leave_count(self):

@@ -51,14 +51,18 @@ def dashboard(request):
 def create_leave_request(request):
     if request.user.is_authenticated:
         leave_request_form=LeaveRequestForm()
-            
-        if request.method=="POST":
-            leave_request_form=LeaveRequestForm(data=request.POST)
-            if leave_request_form.is_valid():
-                leave_request=leave_request_form.save(current_user=request.user)
 
-                messages.success(request,"Leave Requested Created Successfully")
-                leave_request_form=LeaveRequestForm()
+        if request.user.employee.line_manager is None:
+            messages.success(request,"Please contact your admin to assign you a line manager")
+
+        else:   
+            if request.method=="POST":
+                leave_request_form=LeaveRequestForm(data=request.POST)
+                if leave_request_form.is_valid():
+                    leave_request=leave_request_form.save(current_user=request.user)
+
+                    messages.success(request,"Leave Requested Created Successfully")
+                    leave_request_form=LeaveRequestForm()
         return render(request,'leave_request.html',{"form":leave_request_form,"submit_button_name": 'Request Leave'})
     return render(request, 'leave_request.html')
 
