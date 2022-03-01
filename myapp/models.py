@@ -18,6 +18,19 @@ def decryptPassword(password):
     decpassword = fernet.decrypt(password.encode())
     return decpassword
 import numpy as np
+from cryptography.fernet import Fernet
+
+def encPassword(password):
+    key = Fernet.generate_key
+    fernet = Fernet(key)
+    encpassword = fernet.encrypt(password.encode())
+    return encpassword
+
+def decPassword(password):
+    key = Fernet.generate_key
+    fernet = Fernet(key)
+    decpassword = fernet.decrypt(password.encode())
+    return decpassword
 # Create your models here.
  
 class MyUserManager(BaseUserManager):
@@ -63,6 +76,8 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+    # def __str__(self):
+    #     return self.email
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -150,7 +165,10 @@ class Leave(models.Model):
     to_date = models.DateTimeField(auto_created=False,auto_now_add=False)
     employee = models.ForeignKey(to=Employee,on_delete=models.CASCADE,related_name='leaves')
     include_sat_sun = models.BooleanField(default=False)
+<<<<<<< HEAD
 
+=======
+>>>>>>> f0320f56a0a31e488bc4ee4844c923541c7e4142
     # is_pending ia a boolean field which will denote the state of leave obj
 
     is_leave_pending = models.BooleanField(null=True,blank=True, default=True)
@@ -171,7 +189,12 @@ class Leave(models.Model):
 
 
     def date_diff(self):
-        diff = self.to_date.day-self.from_date.day
+        if self.include_sat_sun:
+            business_days_count=np.busday_count(self.from_date.strftime('%Y-%m-%d'),self.to_date.strftime('%Y-%m-%d'),weekmask='1111111')
+        else:
+            business_days_count=np.busday_count(self.from_date.strftime('%Y-%m-%d'),self.to_date.strftime('%Y-%m-%d'),weekmask='1111100')
+        # leaves_remaining =leaves_remaining - business_days_count
+        # diff = (self.to_date.day-self.from_date.day)+1
         #business_days_count=np.busday_count(self.from_date.strftime('%Y-%m-%d'),self.to_date.strftime('%Y-%m-%d'))
-        return diff
+        return business_days_count+1
     

@@ -41,6 +41,7 @@ def employeelogin(request):
                 password= form.cleaned_data.get('password')
                 print(password)
                 varuser=authenticate(username=email,password=password)
+                print(password)
                 if varuser is not None:
                     login(request,varuser)
                    # messages.info(request,f"You are logged in as {email}")
