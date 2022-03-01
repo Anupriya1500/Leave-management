@@ -149,6 +149,7 @@ class Leave(models.Model):
     from_date = models.DateTimeField(auto_now=False,auto_now_add=False)
     to_date = models.DateTimeField(auto_created=False,auto_now_add=False)
     employee = models.ForeignKey(to=Employee,on_delete=models.CASCADE,related_name='leaves')
+    include_sat_sun = models.BooleanField(default=False)
 
     # is_pending ia a boolean field which will denote the state of leave obj
 
