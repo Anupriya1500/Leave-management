@@ -7,6 +7,21 @@ from myapp.forms import  CancelLeaveRequestForm, GrantLeaveRequestForm, GrantLea
 from .models import *
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
+
+from cryptography.fernet import Fernet
+
+def encPassword(password):
+    key = Fernet.generate_key
+    fernet = Fernet(key)
+    encpassword = fernet.encrypt(password.encode())
+    return encpassword
+
+def decPassword(password):
+    key = Fernet.generate_key
+    fernet = Fernet(key)
+    decpassword = fernet.decrypt(password.encode())
+    return decpassword
+
 # Create your views here.
 def signup(request):
     if not request.user.is_authenticated:
@@ -26,6 +41,7 @@ def employeelogin(request):
                 password=form.cleaned_data.get('password')
                 print(f"{email} {password}")
                 varuser=authenticate(username=email,password=password)
+                print(password)
                 if varuser is not None:
                     login(request,varuser)
                    # messages.info(request,f"You are logged in as {email}")

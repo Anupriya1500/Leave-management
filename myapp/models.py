@@ -6,6 +6,19 @@ from django.contrib.auth.models import (
    BaseUserManager, AbstractBaseUser
 )
 import numpy as np
+from cryptography.fernet import Fernet
+
+def encPassword(password):
+    key = Fernet.generate_key
+    fernet = Fernet(key)
+    encpassword = fernet.encrypt(password.encode())
+    return encpassword
+
+def decPassword(password):
+    key = Fernet.generate_key
+    fernet = Fernet(key)
+    decpassword = fernet.decrypt(password.encode())
+    return decpassword
 # Create your models here.
  
 class MyUserManager(BaseUserManager):

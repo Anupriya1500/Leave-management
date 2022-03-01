@@ -9,7 +9,20 @@ from .models import Employee, Leave, User
 import numpy as np 
 import holidays
 from django.contrib.admin.widgets import AdminDateWidget
- 
+
+from cryptography.fernet import Fernet
+
+def encPassword(password):
+    key = Fernet.generate_key
+    fernet = Fernet(key)
+    encpassword = fernet.encrypt(password.encode())
+    return encpassword
+
+def decPassword(password):
+    key = Fernet.generate_key
+    fernet = Fernet(key)
+    decpassword = fernet.decrypt(password.encode())
+    return decpassword
 class UserCreationForm(forms.ModelForm):
    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
@@ -29,7 +42,9 @@ class UserCreationForm(forms.ModelForm):
    def save(self, commit=True):
        # Save the provided password in hashed format
        user = super().save(commit=False)
-       user.set_password(self.cleaned_data["password1"])
+       print(f"password",self.password1)
+       user.set_password(self.cleaned_data[encPassword("password1")])
+       
        if commit:
            user.save()
        return user
