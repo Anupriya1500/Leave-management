@@ -10,24 +10,14 @@ from django.contrib.auth.forms import AuthenticationForm
 
 from cryptography.fernet import Fernet
 
-<<<<<<< HEAD
-def encPassword(password):
-    key = Fernet.generate_key
-=======
 def encryptPassword(password):
     key = Fernet.generate_key()
->>>>>>> 9785c8a097aa1499223b5f956bedcb17f677f56e
     fernet = Fernet(key)
     encpassword = fernet.encrypt(password.encode())
     return encpassword
 
-<<<<<<< HEAD
-def decPassword(password):
-    key = Fernet.generate_key
-=======
 def decryptPassword(password):
     key = Fernet.generate_key()
->>>>>>> 9785c8a097aa1499223b5f956bedcb17f677f56e
     fernet = Fernet(key)
     decpassword = fernet.decrypt(password.encode())
     return decpassword

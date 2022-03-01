@@ -76,6 +76,8 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+    # def __str__(self):
+    #     return self.email
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -162,7 +164,7 @@ class Leave(models.Model):
     from_date = models.DateTimeField(auto_now=False,auto_now_add=False)
     to_date = models.DateTimeField(auto_created=False,auto_now_add=False)
     employee = models.ForeignKey(to=Employee,on_delete=models.CASCADE,related_name='leaves')
-
+    include_sat_sun = models.BooleanField(default=False)
     # is_pending ia a boolean field which will denote the state of leave obj
 
     is_leave_pending = models.BooleanField(null=True,blank=True, default=True)
@@ -183,7 +185,12 @@ class Leave(models.Model):
 
 
     def date_diff(self):
-        diff = self.to_date.day-self.from_date.day
+        if self.include_sat_sun:
+            business_days_count=np.busday_count(self.from_date.strftime('%Y-%m-%d'),self.to_date.strftime('%Y-%m-%d'),weekmask='1111111')
+        else:
+            business_days_count=np.busday_count(self.from_date.strftime('%Y-%m-%d'),self.to_date.strftime('%Y-%m-%d'),weekmask='1111100')
+        # leaves_remaining =leaves_remaining - business_days_count
+        # diff = (self.to_date.day-self.from_date.day)+1
         #business_days_count=np.busday_count(self.from_date.strftime('%Y-%m-%d'),self.to_date.strftime('%Y-%m-%d'))
-        return diff
+        return business_days_count+1
     
