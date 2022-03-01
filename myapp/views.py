@@ -10,14 +10,24 @@ from django.contrib.auth.forms import AuthenticationForm
 
 from cryptography.fernet import Fernet
 
+<<<<<<< HEAD
 def encPassword(password):
     key = Fernet.generate_key
+=======
+def encryptPassword(password):
+    key = Fernet.generate_key()
+>>>>>>> 9785c8a097aa1499223b5f956bedcb17f677f56e
     fernet = Fernet(key)
     encpassword = fernet.encrypt(password.encode())
     return encpassword
 
+<<<<<<< HEAD
 def decPassword(password):
     key = Fernet.generate_key
+=======
+def decryptPassword(password):
+    key = Fernet.generate_key()
+>>>>>>> 9785c8a097aa1499223b5f956bedcb17f677f56e
     fernet = Fernet(key)
     decpassword = fernet.decrypt(password.encode())
     return decpassword
@@ -38,8 +48,8 @@ def employeelogin(request):
             form=AuthenticationForm(request,data=request.POST)
             if form.is_valid():
                 email=form.cleaned_data.get('username')
-                password=form.cleaned_data.get('password')
-                print(f"{email} {password}")
+                password= form.cleaned_data.get('password')
+                print(password)
                 varuser=authenticate(username=email,password=password)
                 print(password)
                 if varuser is not None:
@@ -48,9 +58,12 @@ def employeelogin(request):
                     print("user authenticated Sucessfully ")
                     return redirect("/Dashboard")
                     return render(request,'dashboard.html',{'user':varuser})
+
+                else:
+                    messages.error(request,'Account is invalid', extra_tags = 'alert alert-error alert-dismissible show')
+                    return redirect('login')
             else:
-                print(f'Invalid username or password')
-                messages.error(request,f"Invalid username or password")
+                messages.error(request,"Invalid username or password",extra_tags = 'alert alert-error alert-dismissible show')
             
 
         form=AuthenticationForm()
@@ -58,7 +71,7 @@ def employeelogin(request):
 
 def userlogout(request):    
     logout(request)
-    messages.info(request,"You have Successfully logged out")
+    messages.info(request,"You have Successfully logged out",extra_tags = 'alert alert-error alert-dismissible show')
     return redirect("/login/")
 
 def dashboard(request):

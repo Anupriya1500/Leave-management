@@ -31,11 +31,11 @@ SECRET_KEY = 'django-insecure-(7j78l4y2*3aonm&lfxmj+-vh&pc*ig-u-u%gi*u0f0*cke-yo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.29.233','127.0.0.1']
+
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_extensions',
 
  # INSTALLED APPS
     'crispy_forms',
