@@ -1,4 +1,5 @@
 
+from curses.ascii import EM
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import UserCreationForm
@@ -24,8 +25,19 @@ class UserAdmin(UserAdmin):
    ordering = ('email',)
    filter_horizontal = ()
  
- 
+
+class EmployeeAdminSide(admin.ModelAdmin):
+    model = Employee
+    list_display = ('empId','user','line_manager','position')
+    list_filter = ('line_manager',)
+
+
+class LeaveAdminSide(admin.ModelAdmin):
+    model = Leave
+    list_display = ('id','from_date','to_date','employee','status',)
+    list_filter = ('employee',)
+
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
-admin.site.register(Employee)
-admin.site.register(Leave)
+admin.site.register(Employee,EmployeeAdminSide)
+admin.site.register(Leave,LeaveAdminSide)
