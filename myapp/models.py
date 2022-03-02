@@ -1,22 +1,11 @@
 from email.policy import default
 from typing import List
+from unicodedata import name
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import (
    BaseUserManager, AbstractBaseUser
 )
-from cryptography.fernet import Fernet
-def encryptPassword(password):
-    key = Fernet.generate_key()
-    fernet = Fernet(key)
-    encpassword = fernet.encrypt(password.encode())
-    return encpassword
-
-def decryptPassword(password):
-    key = Fernet.generate_key()
-    fernet = Fernet(key)
-    decpassword = fernet.decrypt(password.encode())
-    return decpassword
 import numpy as np
 from cryptography.fernet import Fernet
 
@@ -100,7 +89,7 @@ class Employee(models.Model):
 
     
     def __str__(self):
-        return f"{self.user}"
+        return f"{self.user.name}"
     def get_leave_count(self):
         return self.leaves.all().count()
     def get_max_leaves(self):
@@ -165,10 +154,6 @@ class Leave(models.Model):
     to_date = models.DateTimeField(auto_created=False,auto_now_add=False)
     employee = models.ForeignKey(to=Employee,on_delete=models.CASCADE,related_name='leaves')
     include_sat_sun = models.BooleanField(default=False)
-<<<<<<< HEAD
-
-=======
->>>>>>> f0320f56a0a31e488bc4ee4844c923541c7e4142
     # is_pending ia a boolean field which will denote the state of leave obj
 
     is_leave_pending = models.BooleanField(null=True,blank=True, default=True)
