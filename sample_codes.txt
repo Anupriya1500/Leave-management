@@ -53,3 +53,40 @@ us_holidays = holidays.country_holidays('US')  # this is a dict
 date(2015, 1, 1) in us_holidays  # True
 date(2015, 1, 2) in us_holidays  # False
 us_holidays.get('2014-01-01')  # "New Year's Day"
+
+
+
+# not including sat sun but count still same
+3-5 including morning evening shift but NOT including sat sun but still its counting sat in it and giving 3 days should give 2 days
+
+# LM unable to approve leave
+3-5 including morning shift but not including evening shift , including sat sun and  dates between 3-5 5 is sat, LM can't approve
+3-4 included morning shift not included sat sun and evening shift  then LM is not able to approve the leave
+
+
+3-3 including moring shift but not including evening shift and sat sun  0.5 alloted done 
+
+
+# in both cases LM unable to approve leave same day which is sat
+5-5 which is a sat .....not including sat sun but including both morning and evening
+5-5 which is a sat .....including sat sun but including both morning and evening
+
+
+# not able to approve 
+ 4-7 friday to monday not including sat sun .. that means 2 days leave...including both shifts
+ 4-7 friday to monday including sat sun .. that means 4 days leave...including both shifts
+
+
+ 03/Mar/2022 12:41:47] "GET /Dashboard/ HTTP/1.1" 200 12275
+[03/Mar/2022 12:41:47] "GET /list-leave-requests/ HTTP/1.1" 200 21062
+[03/Mar/2022 12:41:50] "GET /request-leave/ HTTP/1.1" 200 14514
+2022-03-03 00:00:00+00:00
+2022-03-05 00:00:00+00:00
+[03/Mar/2022 12:42:03] "POST /request-leave/ HTTP/1.1" 200 15028
+[03/Mar/2022 12:42:06] "GET /Dashboard/ HTTP/1.1" 200 12667
+[03/Mar/2022 12:42:07] "GET /list-pending-requests/ HTTP/1.1" 200 19751
+[03/Mar/2022 12:42:10] "GET /grant-leave/13/ HTTP/1.1" 200 14964
+Not Found: /grant-leave/13/assets/img/favicon.ico
+[03/Mar/2022 12:42:10] "GET /grant-leave/13/assets/img/favicon.ico HTTP/1.1" 404 4815
+[03/Mar/2022 12:42:12] "POST /grant-leave/13/ HTTP/1.1" 200 15471
+[03/Mar/2022 12:42:18] "GET /Dashboard/ HTTP/1.1" 200 12667
