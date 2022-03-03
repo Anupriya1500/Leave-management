@@ -115,8 +115,8 @@ class LeaveRequestForm(forms.ModelForm):
 
 class GrantLeaveRequestForm(forms.ModelForm):
     employee_id = forms.CharField(max_length=50,disabled=True,required=False)
-    max_leaves = forms.IntegerField(disabled=True,required=False)
-    leaves_remaining = forms.IntegerField(disabled=True,required=False)
+    max_leaves = forms.FloatField(disabled=True,required=False)
+    leaves_remaining = forms.FloatField(disabled=True,required=False)
     from_date = forms.DateTimeField(disabled=True,required=False)
     to_date = forms.DateTimeField(disabled=True,required=False)
     reason = forms.CharField(disabled=True,required=False)
@@ -324,8 +324,8 @@ class GrantLeaveRequestForm(forms.ModelForm):
 
 class GrantLeaveRequestModelForm(forms.ModelForm):
     employee_id = forms.CharField(max_length=50,disabled=True)
-    max_leaves = forms.IntegerField(disabled=True)
-    leaves_remaining = forms.IntegerField(disabled=True)
+    max_leaves = forms.FloatField(disabled=True)
+    leaves_remaining = forms.FloatField(disabled=True)
     class Meta:
         model=Leave
         exclude=["employee"]

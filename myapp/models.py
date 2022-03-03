@@ -72,7 +72,7 @@ class Employee(models.Model):
     user= models.OneToOneField(User,on_delete=models.CASCADE,related_name='employee')
     line_manager=models.ForeignKey(to='self',null=True,on_delete=models.SET_NULL,default=None,blank=True,related_name='employees')
     position = models.CharField(max_length=80)
-    max_leaves = models.IntegerField(default=31)
+    max_leaves = models.FloatField(default=31)
     leaves_remaining = models.FloatField(default=31)
     is_a_line_manager = models.BooleanField(default=False)
 
