@@ -73,7 +73,7 @@ class LeaveRequestForm(forms.ModelForm):
     # to_date=forms.DateField(widget = AdminDateWidget())
 
     class Meta:
-        model=Leave
+        model=Leave       
         exclude=['id','employee','is_leave_approved','status','is_leave_rejected','is_leave_cancelled','is_leave_pending']
     def clean(self):
         cleaned_data = super().clean()

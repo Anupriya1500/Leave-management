@@ -1,3 +1,4 @@
+from ast import Pass
 from email.policy import default
 from typing import List
 from unicodedata import name
@@ -83,8 +84,8 @@ class Employee(models.Model):
     user= models.OneToOneField(User,on_delete=models.CASCADE,related_name='employee')
     line_manager=models.ForeignKey(to='self',null=True,on_delete=models.SET_NULL,default=None,blank=True,related_name='employees')
     position = models.CharField(max_length=80)
-    max_leaves = models.IntegerField(default=31)
-    leaves_remaining = models.IntegerField(default=31)
+    max_leaves = models.PositiveIntegerField(default=31)
+    leaves_remaining = models.PositiveIntegerField(default=31)
     is_a_line_manager = models.BooleanField(default=False)
 
     
@@ -154,6 +155,8 @@ class Leave(models.Model):
     to_date = models.DateTimeField(auto_created=False,auto_now_add=False)
     employee = models.ForeignKey(to=Employee,on_delete=models.CASCADE,related_name='leaves')
     include_sat_sun = models.BooleanField(default=False)
+    half_day_start = models.BooleanField('Half Day Start', default=False)
+    half_day_end = models.BooleanField('Half Day End', default=False)
     # is_pending ia a boolean field which will denote the state of leave obj
 
     is_leave_pending = models.BooleanField(null=True,blank=True, default=True)
@@ -182,4 +185,12 @@ class Leave(models.Model):
         # diff = (self.to_date.day-self.from_date.day)+1
         #business_days_count=np.busday_count(self.from_date.strftime('%Y-%m-%d'),self.to_date.strftime('%Y-%m-%d'))
         return business_days_count+1
+
+    # def half_Day_start(self):
+    #     pass
+    
+    # def half_Day_end(self):
+    #     pass
+
+    
     
