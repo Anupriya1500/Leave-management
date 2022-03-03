@@ -19,11 +19,19 @@ def date_diff(leave):
                 fraction_day_count = 0.5
             if not np.is_busday(leave.from_date.strftime('%Y-%m-%d')) and not leave.include_sat_sun:
                 fraction_day_count = 0
-
-        if leave.include_sat_sun:
-            business_days_count=np.busday_count(leave.from_date.strftime('%Y-%m-%d'),leave.to_date.strftime('%Y-%m-%d'),weekmask='1111111')+fraction_day_count 
+            if leave.include_sat_sun:
+                business_days_count=np.busday_count(leave.from_date.strftime('%Y-%m-%d'),leave.to_date.strftime('%Y-%m-%d'),weekmask='1111111')+fraction_day_count 
+            else:
+                business_days_count=np.busday_count(leave.from_date.strftime('%Y-%m-%d'),leave.to_date.strftime('%Y-%m-%d'),weekmask='1111100')+fraction_day_count
+        
         else:
-            business_days_count=np.busday_count(leave.from_date.strftime('%Y-%m-%d'),leave.to_date.strftime('%Y-%m-%d'),weekmask='1111100')+fraction_day_count
+            if leave.include_sat_sun:
+                business_days_count=np.busday_count(leave.from_date.strftime('%Y-%m-%d'),leave.to_date.strftime('%Y-%m-%d'),weekmask='1111111')+fraction_day_count 
+            else:
+                if not np.is_busday(leave.from_date.strftime('%Y-%m-%d')) or not np.is_busday(leave.to_date.strftime('%Y-%m-%d')) :
+                    fraction_day_count = 0
+
+                business_days_count=np.busday_count(leave.from_date.strftime('%Y-%m-%d'),leave.to_date.strftime('%Y-%m-%d'),weekmask='1111100')+fraction_day_count
         
         return business_days_count
 
@@ -175,6 +183,7 @@ class GrantLeaveRequestForm(forms.ModelForm):
             if new_status=='Approved':
                 # reduce the No of leave remaining for this employee
                 business_days_count=date_diff(leave)
+                print(employee.leaves_remaining)
                 employee.leaves_remaining =employee.leaves_remaining - business_days_count
                 
                 leave.is_leave_pending=False
@@ -182,6 +191,8 @@ class GrantLeaveRequestForm(forms.ModelForm):
                 leave.is_leave_rejected=False
                 leave.is_leave_cancelled=False
                 leave.status='Approved'
+                print(business_days_count)
+                print(employee.leaves_remaining)
                 employee.save()
                 leave.save()
             #  0 1 0 0  
