@@ -72,13 +72,8 @@ class Employee(models.Model):
     user= models.OneToOneField(User,on_delete=models.CASCADE,related_name='employee')
     line_manager=models.ForeignKey(to='self',null=True,on_delete=models.SET_NULL,default=None,blank=True,related_name='employees')
     position = models.CharField(max_length=80)
-<<<<<<< HEAD
-    max_leaves = models.PositiveIntegerField(default=31)
-    leaves_remaining = models.PositiveIntegerField(default=31)
-=======
-    max_leaves = models.IntegerField(default=31)
-    leaves_remaining = models.FloatField(default=31)
->>>>>>> 9d245a7e128456c6eb50a5f626fec1df7c1678c1
+    max_leaves = models.FloatField(default=31.0)
+    leaves_remaining = models.FloatField(default=31.0)
     is_a_line_manager = models.BooleanField(default=False)
 
     
@@ -148,13 +143,8 @@ class Leave(models.Model):
     to_date = models.DateTimeField(auto_created=False,auto_now_add=False)
     employee = models.ForeignKey(to=Employee,on_delete=models.CASCADE,related_name='leaves')
     include_sat_sun = models.BooleanField(default=False)
-<<<<<<< HEAD
-    half_day_start = models.BooleanField('Half Day Start', default=False)
-    half_day_end = models.BooleanField('Half Day End', default=False)
-=======
     half_day_morning_shift = models.BooleanField(default=True)
     half_day_evening_shift = models.BooleanField(default=True)
->>>>>>> 9d245a7e128456c6eb50a5f626fec1df7c1678c1
     # is_pending ia a boolean field which will denote the state of leave obj
 
     is_leave_pending = models.BooleanField(null=True,blank=True, default=True)
