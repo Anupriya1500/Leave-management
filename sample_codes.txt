@@ -77,7 +77,7 @@ us_holidays.get('2014-01-01')  # "New Year's Day"
  4-7 friday to monday including sat sun .. that means 4 days leave...including both shifts
 
 
- 03/Mar/2022 12:41:47] "GET /Dashboard/ HTTP/1.1" 200 12275
+03/Mar/2022 12:41:47] "GET /Dashboard/ HTTP/1.1" 200 12275
 [03/Mar/2022 12:41:47] "GET /list-leave-requests/ HTTP/1.1" 200 21062
 [03/Mar/2022 12:41:50] "GET /request-leave/ HTTP/1.1" 200 14514
 2022-03-03 00:00:00+00:00
@@ -90,3 +90,5 @@ Not Found: /grant-leave/13/assets/img/favicon.ico
 [03/Mar/2022 12:42:10] "GET /grant-leave/13/assets/img/favicon.ico HTTP/1.1" 404 4815
 [03/Mar/2022 12:42:12] "POST /grant-leave/13/ HTTP/1.1" 200 15471
 [03/Mar/2022 12:42:18] "GET /Dashboard/ HTTP/1.1" 200 12667
+
+
